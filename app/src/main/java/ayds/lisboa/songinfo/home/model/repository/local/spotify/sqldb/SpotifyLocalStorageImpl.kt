@@ -23,9 +23,9 @@ internal class SpotifyLocalStorageImpl(
         ALBUM_COLUMN,
         ALBUM_COLUMN,
         RELEASE_DATE_COLUMN,
+        RELEASE_DATE_PRECISION_COLUMN,
         SPOTIFY_URL_COLUMN,
-        IMAGE_URL_COLUMN,
-        RELEASE_DATE_PRECISION_COLUMN
+        IMAGE_URL_COLUMN
     )
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -72,7 +72,6 @@ internal class SpotifyLocalStorageImpl(
             null,
             null
         )
-
         return cursorToSpotifySongMapper.map(cursor)
     }
 

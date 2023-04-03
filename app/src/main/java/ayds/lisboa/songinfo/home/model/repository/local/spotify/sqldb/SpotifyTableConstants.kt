@@ -19,6 +19,6 @@ const val createSongsTableQuery: String =
             "$ARTIST_COLUMN integer, " +
             "$ALBUM_COLUMN string, " +
             "$RELEASE_DATE_COLUMN string, " +
+            "$RELEASE_DATE_PRECISION_COLUMN string, " +
             "$SPOTIFY_URL_COLUMN string, " +
-            "$IMAGE_URL_COLUMN string" +
-            "$RELEASE_DATE_PRECISION_COLUMN string)"
+            "$IMAGE_URL_COLUMN string)"
