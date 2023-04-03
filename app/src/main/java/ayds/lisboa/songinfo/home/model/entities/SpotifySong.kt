@@ -9,12 +9,9 @@ sealed class Song {
         val releaseDate: String,
         val spotifyUrl: String,
         val imageUrl: String,
-        var isLocallyStored: Boolean = false
-    ) : Song() {
-
-        val year: String = releaseDate.split("-").first()
-    }
-
+        var isLocallyStored: Boolean = false,
+        var releaseDatePrecision: String
+    ) : Song()
     object EmptySong : Song()
 }
 
