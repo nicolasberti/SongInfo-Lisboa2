@@ -1,5 +1,6 @@
 package ayds.lisboa.songinfo.home.model.entities
 import java.text.SimpleDateFormat
+import java.util.*
 
 sealed class Song {
     data class SpotifySong(
@@ -8,10 +9,10 @@ sealed class Song {
         val artistName: String,
         val albumName: String,
         val releaseDate: String,
+        var releaseDatePrecision: String,
         val spotifyUrl: String,
         val imageUrl: String,
-        var isLocallyStored: Boolean = false,
-        var releaseDatePrecision: String
+        var isLocallyStored: Boolean = false
     ) : Song(){
         fun getDate(): String =
             when(releaseDatePrecision){
@@ -20,24 +21,19 @@ sealed class Song {
                     outFormat.format(releaseDate)
                 }
                 "year" -> { val year = releaseDate.split("-").first()
-                    year + " " + calculadoraBiciesto.esBiciesto(year.parseInt())
+                    year + " " + calculadoraBiciesto.esBiciesto(year.toInt())
                 }
+                else -> ""
             }
     }
 
     object calculadoraBiciesto {
 
-        fun esBiciesto(year: Int): String {
-            if (year % 4 == 0) {
-                if (year % 100 == 0) {
-                    year % 400 == 0
-                } else {
-                    return "(leap year)"
-                }
-            } else {
-                return "(not a leap year)"
-            }
-        }
+        fun esBiciesto(year: Int): String =
+            if ((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0))
+                "(leap year)"
+            else
+                "(not a leap year)"
     }
 
     object EmptySong : Song()
