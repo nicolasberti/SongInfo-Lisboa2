@@ -1,6 +1,7 @@
 package ayds.lisboa.songinfo.home.model.entities
-import java.text.SimpleDateFormat
-import java.util.*
+import android.os.Build
+import androidx.annotation.RequiresApi
+import java.time.Month
 
 sealed class Song {
     data class SpotifySong(
@@ -14,16 +15,15 @@ sealed class Song {
         val imageUrl: String,
         var isLocallyStored: Boolean = false
     ) : Song(){
+        @RequiresApi(Build.VERSION_CODES.O)
         fun getDate(): String =
             when(releaseDatePrecision){
                 "day" -> releaseDate
-                "month" -> { val outFormat = SimpleDateFormat("MMMM, yyyy", Locale.US)
-                    outFormat.format(releaseDate)
-                }
+                "month" -> CalculatorYearMonth.converter(releaseDate)
                 "year" -> { val year = releaseDate.split("-").first()
                     year + " " + CalculatorLeap.itsLeap(year.toInt())
                 }
-                else -> ""
+                else -> "Date not found"
             }
     }
 
@@ -35,6 +35,17 @@ sealed class Song {
                 "(leap year)"
             else
                 "(not a leap year)"
+
+    }
+
+    object CalculatorYearMonth {
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun converter(date: String): String {
+                val month = date.split("-").get(1)
+                val monthName = Month.of(month.toInt()).toString()
+                val year = date.split("-").first()
+            return "$monthName, $year"
+        }
 
     }
 
