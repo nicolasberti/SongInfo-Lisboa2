@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import ayds.lisboa.songinfo.home.model.entities.Song.SpotifySong
 import ayds.lisboa.songinfo.home.model.repository.local.spotify.SpotifyLocalStorage
 
-private const val DATABASE_VERSION = 1
+private const val DATABASE_VERSION = 2
 private const val DATABASE_NAME = "songs.db"
 
 internal class SpotifyLocalStorageImpl(
@@ -19,8 +19,8 @@ internal class SpotifyLocalStorageImpl(
     private val projection = arrayOf(
         ID_COLUMN,
         NAME_COLUMN,
+        TERM_COLUMN,
         ARTIST_COLUMN,
-        ALBUM_COLUMN,
         ALBUM_COLUMN,
         RELEASE_DATE_COLUMN,
         RELEASE_DATE_PRECISION_COLUMN,
@@ -32,7 +32,10 @@ internal class SpotifyLocalStorageImpl(
         db.execSQL(createSongsTableQuery)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE $SONGS_TABLE")
+        onCreate(db)
+    }
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         onUpgrade(db, oldVersion, newVersion)

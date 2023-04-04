@@ -9,7 +9,7 @@ sealed class Song {
         val artistName: String,
         val albumName: String,
         val releaseDate: String,
-        var releaseDatePrecision: String,
+        val releaseDatePrecision: String,
         val spotifyUrl: String,
         val imageUrl: String,
         var isLocallyStored: Boolean = false
@@ -21,22 +21,22 @@ sealed class Song {
                     outFormat.format(releaseDate)
                 }
                 "year" -> { val year = releaseDate.split("-").first()
-                    year + " " + calculadoraBiciesto.esBiciesto(year.toInt())
+                    year + " " + CalculatorLeap.itsLeap(year.toInt())
                 }
                 else -> ""
             }
     }
 
-    object calculadoraBiciesto {
+    object EmptySong : Song()
 
-        fun esBiciesto(year: Int): String =
+    object CalculatorLeap {
+        fun itsLeap(year: Int): String =
             if ((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0))
                 "(leap year)"
             else
                 "(not a leap year)"
-    }
 
-    object EmptySong : Song()
+    }
 
 }
 
