@@ -18,8 +18,37 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
                 }\n" +
                         "Artist: ${song.artistName}\n" +
                         "Album: ${song.albumName}\n" +
-                        "Date: ${song.getDate()}"
+                        "Date: ${getDate(song.releaseDate,song.releaseDatePrecision)}"
             else -> "Song not found"
         }
     }
+
+    private fun getDate(releaseDate:String, releaseDatePrecision:String): String =
+        when(releaseDatePrecision){
+            "day" -> releaseDate
+            "month" -> CalculatorYearMonth.converter(releaseDate)
+            "year" -> { val year = releaseDate.split("-").first()
+                year + " " + CalculatorLeap.itsLeap(year.toInt())
+            }
+            else -> "Date not found"
+        }
+    
+    object CalculatorLeap {
+        fun itsLeap(year: Int): String =
+            if ((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0))
+                "(leap year)"
+            else
+                "(not a leap year)"
+    }
+
+    object CalculatorYearMonth {
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun converter(date: String): String {
+            val month = date.split("-").get(1)
+            val monthName = Month.of(month.toInt()).toString()
+            val year = date.split("-").first()
+            return "$monthName, $year"
+        }
+    }
+
 }
