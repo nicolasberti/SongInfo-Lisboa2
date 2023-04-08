@@ -28,13 +28,19 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
 object CalculatorDate {
     fun getDate(song: SpotifySong): String =
         when(song.releaseDatePrecision){
-            "day" -> song.releaseDate
+            "day" -> ConverterDate.converterDate(song.releaseDate)
             "month" -> CalculatorYearMonth.converter(song.releaseDate)
             "year" -> { val year = song.releaseDate.split("-").first()
                 year + " " + CalculatorLeap.itsLeap(year.toInt())
             }
             else -> "Date not found"
         }
+}
+
+object ConverterDate {
+    fun converterDate(date: String): String {
+        return date.replace("-", "/").split("/").reversed().joinToString(separator = "/")
+    }
 }
 
 object CalculatorLeap {
