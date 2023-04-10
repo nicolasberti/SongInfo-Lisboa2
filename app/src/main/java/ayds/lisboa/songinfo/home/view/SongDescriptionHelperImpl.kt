@@ -25,43 +25,54 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
     }
 }
 
-object CalculatorDate {
-    fun getDate(song: SpotifySong): String =
-        when(song.releaseDatePrecision){
-            "day" -> ConverterDate.converterDate(song.releaseDate)
-            "month" -> CalculatorYearMonth.converter(song.releaseDate)
-            "year" -> { val year = song.releaseDate.split("-").first()
-                year + " " + CalculatorLeap.itsLeap(year.toInt())
-            }
-            else -> "Date not found"
-        }
+interface IMonths {
+    fun months(): List<String>
 }
 
-object ConverterDate {
-    fun converterDate(date: String): String {
+abstract class Converter {
+    abstract fun converter(date: String): String
+}
+
+object ConverterDay : Converter() {
+    override fun converter(date: String): String {
         return date.replace("-", "/").split("/").reversed().joinToString(separator = "/")
     }
 }
-
-object CalculatorLeap {
-    fun itsLeap(year: Int): String =
-        if ((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0))
-            "(leap year)"
-        else
-            "(not a leap year)"
-
-}
-
-object CalculatorYearMonth {
-    fun converter(date: String): String {
+object ConverterMonth : Converter(), IMonths {
+    override fun converter(date: String): String {
         val month = date.split("-")[1].toInt() - 1
         val monthName = months()[month]
         val year = date.split("-").first()
         return "$monthName, $year"
     }
 
-    fun months(): List<String>{
+    override fun months(): List<String> {
         val symbols = DateFormatSymbols()
-        return symbols.months.filter { it.isNotEmpty() }
+        var listmonths = symbols.months.filter { it.isNotEmpty() }
+        return listmonths.map { it.replaceFirstChar { char -> char.uppercase() } }
     }
+}
+
+object ConverterYear : Converter() {
+    override fun converter(date: String): String {
+        val year = date.split("-").first().toInt()
+        var result: String
+
+        if( (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) )
+            result = "$year (leap year)"
+        else
+            result = "$year (not a leap year)"
+
+        return result
+    }
+}
+
+object CalculatorDate {
+    fun getDate(song: SpotifySong): String =
+        when(song.releaseDatePrecision){
+            "day" -> ConverterDay.converter(song.releaseDate)
+            "month" -> ConverterMonth.converter(song.releaseDate)
+            "year" -> ConverterYear.converter(song.releaseDate)
+            else -> "Date not found"
+        }
 }
