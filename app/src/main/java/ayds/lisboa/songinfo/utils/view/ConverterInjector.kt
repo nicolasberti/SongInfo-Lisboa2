@@ -1,5 +1,3 @@
-import CalculatorFactory
-
 object ConverterInjector {
 
     private lateinit var converter: Converter

@@ -49,13 +49,10 @@ class ConverterMonthImpl : Converter {
 class ConverterYearImpl : Converter {
     override fun convert(date: String): String {
         val year = date.split("-").first().toInt()
-        var result: String
 
-        if( (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0) )
-            result = "$year (leap year)"
+        return if ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0))
+            "$year (leap year)"
         else
-            result = "$year (not a leap year)"
-
-        return result
+            "$year (not a leap year)"
     }
 }

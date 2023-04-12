@@ -1,7 +1,4 @@
 package ayds.lisboa.songinfo.home.model.entities
-import android.os.Build
-import androidx.annotation.RequiresApi
-import java.time.Month
 
 sealed class Song {
     data class SpotifySong(

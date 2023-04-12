@@ -1,4 +1,3 @@
-import Converter
 
 interface CalculatorFactory {
     fun create(precision: String): Converter
