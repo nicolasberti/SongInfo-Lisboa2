@@ -1,11 +1,13 @@
-class ConverterInjector {
+import CalculatorFactory
 
-    private val converter: Converter 
-    
+object ConverterInjector {
+
+    private lateinit var converter: Converter
+
     fun getConverter(): Converter = converter
 
     fun initConverter(precision: String) {
-        converter = CalculatorFactory.create(precision)
+        converter = CalculatorFactoryImpl.create(precision)
     }
-    
+
 }

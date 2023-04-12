@@ -1,9 +1,11 @@
 package ayds.lisboa.songinfo.home.view
 
+import Converter
+import ConverterInjector
 import ayds.lisboa.songinfo.home.model.entities.Song.EmptySong
 import ayds.lisboa.songinfo.home.model.entities.Song
 import ayds.lisboa.songinfo.home.model.entities.Song.SpotifySong
-import java.text.DateFormatSymbols
+
 
 interface SongDescriptionHelper {
     fun getSongDescriptionText(song: Song = EmptySong): String
@@ -12,12 +14,13 @@ interface SongDescriptionHelper {
 internal class SongDescriptionHelperImpl : SongDescriptionHelper {
 
      //private val songDescriptionHelper: SongDescriptionHelper = HomeViewInjector.songDescriptionHelper
-     private val converter: Converter
+     private lateinit var converter: Converter
 
     override fun getSongDescriptionText(song: Song): String {
-        converter = ConverterInjector.initConverter(precision)
         return when (song) {
-            is SpotifySong ->
+            is SpotifySong -> {
+                ConverterInjector.initConverter(song.releaseDatePrecision)
+                converter = ConverterInjector.getConverter()
                 "${
                     "Song: ${song.songName} " +
                             if (song.isLocallyStored) "[*]" else ""
@@ -25,6 +28,7 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
                         "Artist: ${song.artistName}\n" +
                         "Album: ${song.albumName}\n" +
                         "Date: ${converter.convert(song.releaseDate)}"
+            }
             else -> "Song not found"
         }
     }

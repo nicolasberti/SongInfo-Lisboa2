@@ -2,13 +2,13 @@ interface Converter {
     fun convert(date: String): String
 }
 
-class ConverterDefaultImpl : Converter() {
+class ConverterDefaultImpl : Converter {
     override fun convert(date: String): String {
         return date
     }
 }
 
-class ConverterDayImpl : Converter() {
+class ConverterDayImpl : Converter {
     override fun convert(date: String): String {
         val replace = date.replace("-", "/")
         val split = replace.split("/")
@@ -19,16 +19,16 @@ class ConverterDayImpl : Converter() {
     }
 }
 
-class ConverterMonthImpl : Converter() {
+class ConverterMonthImpl : Converter {
     override fun convert(date: String): String {
-        val month = date.split("-")[1].toInt() - 1
+        val month = date.split("-")[1].toInt()
         val monthName = getMonthName(month)
         val year = date.split("-").first()
         return "$monthName, $year"
     }
 
     private fun getMonthName(month: Int): String{
-        when(month){
+        return when(month){
             1 -> "Enero"
             2 -> "Febrero"
             3 -> "Marzo"
@@ -40,12 +40,13 @@ class ConverterMonthImpl : Converter() {
             9 -> "Septiembre"
             10 -> "Octubre"
             11 -> "Noviembre"
-            12 -> "Diciembre" 
+            12 -> "Diciembre"
+            else -> ""
         }
     }
 }
 
-class ConverterYearImpl : Converter() {
+class ConverterYearImpl : Converter {
     override fun convert(date: String): String {
         val year = date.split("-").first().toInt()
         var result: String
