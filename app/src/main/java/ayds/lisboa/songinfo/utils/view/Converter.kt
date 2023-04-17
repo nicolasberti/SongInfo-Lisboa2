@@ -1,15 +1,15 @@
 interface Converter {
-    fun convert(date: String): String
+    fun getReleaseDate(date: String): String
 }
 
 internal class ConverterDefaultImpl : Converter {
-    override fun convert(date: String): String {
+    override fun getReleaseDate(date: String): String {
         return date
     }
 }
 
 internal class ConverterDayImpl : Converter {
-    override fun convert(date: String): String {
+    override fun getReleaseDate(date: String): String {
         val dateWithSlash = date.replace("-", "/")
         val dateMembersArray = dateWithSlash.split("/")
         val dateMembersArrayReversed = dateMembersArray.reversed()
@@ -19,10 +19,12 @@ internal class ConverterDayImpl : Converter {
 }
 
 internal class ConverterMonthImpl : Converter {
-    override fun convert(date: String): String {
-        val month = date.split("-")[1].toInt()
+    override fun getReleaseDate(date: String): String {
+        val dateArray = date.split("-")
+        val month = dateArray[1].toInt()
+        val year = dateArray[0].toInt()
         val monthName = getMonthName(month)
-        val year = date.split("-").first()
+
         return "$monthName, $year"
     }
 
@@ -46,12 +48,14 @@ internal class ConverterMonthImpl : Converter {
 }
 
 internal class ConverterYearImpl : Converter {
-    override fun convert(date: String): String {
-        val year = date.split("-").first().toInt()
+    override fun getReleaseDate(date: String): String {
+        val dateArray = date.split("-")
+        val yearString = dateArray[0]
+        val yearInt = yearString.toInt()
 
-        return if ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0))
-            "$year (leap year)"
+        return if ((yearInt % 4 == 0) && (yearInt % 100 != 0 || yearInt % 400 == 0))
+            "$yearInt (leap year)"
         else
-            "$year (not a leap year)"
+            "$yearInt (not a leap year)"
     }
 }
