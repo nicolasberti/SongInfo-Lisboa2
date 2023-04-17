@@ -1,14 +1,17 @@
+const val YEAR = "year"
+const val MONTH = "month"
+const val DAY = "day"
 
-interface CalculatorFactory {
+interface DateConverterFactory {
     fun create(precision: String): Converter
 }
 
-object CalculatorFactoryImpl : CalculatorFactory {
+internal class DateConverterFactoryImpl : DateConverterFactory {
     override fun create(precision: String): Converter{
         return when(precision) {
-            "year" -> ConverterYearImpl()
-            "month" -> ConverterMonthImpl()
-            "day" -> ConverterDayImpl()
+            YEAR -> ConverterYearImpl()
+            MONTH -> ConverterMonthImpl()
+            DAY -> ConverterDayImpl()
             else -> ConverterDefaultImpl()
         }
     }
