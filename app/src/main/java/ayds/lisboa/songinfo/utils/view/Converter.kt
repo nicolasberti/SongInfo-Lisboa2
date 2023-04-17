@@ -2,24 +2,23 @@ interface Converter {
     fun convert(date: String): String
 }
 
-class ConverterDefaultImpl : Converter {
+internal class ConverterDefaultImpl : Converter {
     override fun convert(date: String): String {
         return date
     }
 }
 
-class ConverterDayImpl : Converter {
+internal class ConverterDayImpl : Converter {
     override fun convert(date: String): String {
-        val replace = date.replace("-", "/")
-        val split = replace.split("/")
-        val reversed = split.reversed()
-        val result = reversed.joinToString(separator = "/")
-        
+        val dateWithSlash = date.replace("-", "/")
+        val dateMembersArray = dateWithSlash.split("/")
+        val dateMembersArrayReversed = dateMembersArray.reversed()
+        val result = dateMembersArrayReversed.joinToString(separator = "/")
         return result
     }
 }
 
-class ConverterMonthImpl : Converter {
+internal class ConverterMonthImpl : Converter {
     override fun convert(date: String): String {
         val month = date.split("-")[1].toInt()
         val monthName = getMonthName(month)
@@ -46,7 +45,7 @@ class ConverterMonthImpl : Converter {
     }
 }
 
-class ConverterYearImpl : Converter {
+internal class ConverterYearImpl : Converter {
     override fun convert(date: String): String {
         val year = date.split("-").first().toInt()
 
