@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.home.view
 
-import CalculatorDateFactory
+import DateConverterFactory
 import Converter
 import ayds.lisboa.songinfo.home.model.entities.Song.EmptySong
 import ayds.lisboa.songinfo.home.model.entities.Song
@@ -10,7 +10,7 @@ interface SongDescriptionHelper {
     fun getSongDescriptionText(song: Song = EmptySong): String
 }
 
-internal class SongDescriptionHelperImpl(private val calculator: CalculatorFactory) : SongDescriptionHelper {
+internal class SongDescriptionHelperImpl(private val dateConverter: DateConverterFactory) : SongDescriptionHelper {
 
     override fun getSongDescriptionText(song: Song): String {
         return when (song) {
@@ -28,7 +28,7 @@ internal class SongDescriptionHelperImpl(private val calculator: CalculatorFacto
     }
 
     private fun getCalculatorPrecision(precision: String): Converter{
-        return calculator.create(precision)
+        return dateConverter.create(precision)
     }  
 
     private fun SpotifySong.getReleaseDate(): String{
