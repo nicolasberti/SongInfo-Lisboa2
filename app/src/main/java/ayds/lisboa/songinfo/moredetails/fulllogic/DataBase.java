@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,59 +61,45 @@ public class DataBase extends SQLiteOpenHelper {
 
   public static void saveArtist(DataBase dbHelper, String artist, String info)
   {
-    // Gets the data repository in write mode
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
+    SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
+    ContentValues values = createValuesOfArtist(artist, info);
+    dataBase.insert("artists", null, values);
+  }
 
-// Create a new map of values, where column names are the keys
+  private static ContentValues createValuesOfArtist(String artist, String info){
     ContentValues values = new ContentValues();
-    values.put("artist", artist);
-    values.put("info", info);
-    values.put("source", 1);
+      values.put("artist", artist);
+      values.put("info", info);
+      values.put("source", 1);
+    return values;
+  }
 
-// Insert the new row, returning the primary key value of the new row
-    long newRowId = db.insert("artists", null, values);
+
+  private static Cursor getCursor(DataBase dbHelper, String artist){
+    SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+    String[] columnsToUse = { "id", "artist", "info" };
+    String columnFilter = "artist  = ?";
+    String[] columnFilterArgs = { artist };
+    String sortOrderDesc = "artist DESC";
+    Cursor cursor = dataBase.query("artists", columnsToUse, columnFilter, columnFilterArgs,null,null, sortOrderDesc);
+    return cursor;
+  }
+
+  private static List<String> getItemsFromCursor(Cursor cursor){
+    List<String> itemsOfCursor = new ArrayList<String>();
+    while(cursor.moveToNext()) {
+      String info = cursor.getString(cursor.getColumnIndexOrThrow("info"));
+      itemsOfCursor.add(info);
+    }
+    cursor.close();
+    return itemsOfCursor;
   }
 
   public static String getInfo(DataBase dbHelper, String artist)
   {
-
-    SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-// Define a projection that specifies which columns from the database
-// you will actually use after this query.
-    String[] projection = {
-            "id",
-            "artist",
-            "info"
-    };
-
-// Filter results WHERE "title" = 'My Title'
-    String selection = "artist  = ?";
-    String[] selectionArgs = { artist };
-
-// How you want the results sorted in the resulting Cursor
-    String sortOrder = "artist DESC";
-
-    Cursor cursor = db.query(
-            "artists",   // The table to query
-            projection,             // The array of columns to return (pass null to get all)
-            selection,              // The columns for the WHERE clause
-            selectionArgs,          // The values for the WHERE clause
-            null,                   // don't group the rows
-            null,                   // don't filter by row groups
-            sortOrder               // The sort order
-    );
-
-    List<String> items = new ArrayList<String>();
-    while(cursor.moveToNext()) {
-      String info = cursor.getString(
-              cursor.getColumnIndexOrThrow("info"));
-      items.add(info);
-    }
-    cursor.close();
-
-    if(items.isEmpty()) return null;
-    else return items.get(0);
+    Cursor cursor = getCursor(dbHelper, artist);
+    List<String> itemsOfCursor = getItemsFromCursor(cursor);
+    return itemsOfCursor.isEmpty()? null : itemsOfCursor.get(0);
   }
 
   public DataBase(Context context) {
@@ -122,15 +107,13 @@ public class DataBase extends SQLiteOpenHelper {
   }
 
   @Override
-  public void onCreate(SQLiteDatabase db) {
-    db.execSQL(
-            "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, artist string, info string, source integer)");
-
-    Log.i("DB", "DB created");
+  public void onCreate(SQLiteDatabase dataBase) {
+    String query = "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, artist string, info string, source integer)";
+    dataBase.execSQL(query);
+    Log.i("DB", "DataBase created");
   }
 
   @Override
-  public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+  public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
 
-  }
 }
