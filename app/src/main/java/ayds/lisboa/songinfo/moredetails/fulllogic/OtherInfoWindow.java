@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
+import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -132,10 +133,13 @@ public class OtherInfoWindow extends AppCompatActivity {
     Response<String> callResponse;
     JsonObject artist = null;
     try{
-      callResponse = lastFMAPI.getArtistInfo(artistName).execute();
+      Call<String> call = lastFMAPI.getArtistInfo(artistName);
+      callResponse = call.execute();
       Gson gson = new Gson();
-      JsonObject jobj = gson.fromJson(callResponse.body(), JsonObject.class);
-      artist = jobj.get("artist").getAsJsonObject();
+      String body = callResponse.body();
+      JsonObject jobjBody = gson.fromJson(body, JsonObject.class);
+      JsonElement jobjArtist = jobjBody.get("artist");
+      artist = jobjArtist.getAsJsonObject();
     } catch (IOException e1) {
       Log.e("TAG", "Error " + e1);
       e1.printStackTrace();
