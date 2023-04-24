@@ -28,7 +28,7 @@ class OtherInfoWindow : AppCompatActivity() {
         const val ARTIST_NAME_EXTRA = "artistName"
     }
 
-    private var dataBase: DataBase? = null
+    private lateinit var dataBase: DataBase
     private lateinit var textMoreDetails: TextView
     private lateinit var lastFMAPI: LastFMAPI
 
@@ -92,8 +92,8 @@ class OtherInfoWindow : AppCompatActivity() {
         hilo.start()
     }
 
-    private fun getInfoDatabase(artistName: String?): String? {
-        var info = DataBase.getInfo(dataBase, artistName)
+    private fun getInfoDatabase(artistName: String): String? {
+        var info = dataBase.getInfo(dataBase, artistName)
         if (info != null)
             info = "[*]$info"
         return info
@@ -138,8 +138,8 @@ class OtherInfoWindow : AppCompatActivity() {
         return info
     }
 
-    private fun saveInfo(artistName: String?, info: String?) {
-        DataBase.saveArtist(dataBase, artistName, info)
+    private fun saveInfo(artistName: String, info: String) {
+        dataBase.saveArtist(dataBase, artistName, info)
     }
 
     private fun setListenerURL(url: String) {
