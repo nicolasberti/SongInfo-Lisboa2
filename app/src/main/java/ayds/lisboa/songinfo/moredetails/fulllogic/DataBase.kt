@@ -22,62 +22,18 @@ private const val createTableArtists: String =
 private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "dictionary.db"
 
-class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+internal class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     private val projection = arrayOf(
         ID_COLUMN,
         ARTIST_COLUMN,
         INFO_COLUMN
-    )
-
+        )
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(createTableArtists)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
-
-    /** -- Falta esto hacer ReFactor -- **/
-    val URLConnection = "jdbc:sqlite:./dictionary.db"
-    @Throws(SQLException::class)
-    private fun createConnection(): Connection? {
-        return DriverManager.getConnection(URLConnection)
-    }
-
-    @Throws(SQLException::class)
-    private fun createStatement(connection: Connection?): Statement {
-        val statement: Statement = connection.createStatement()
-        statement.setQueryTimeout(30)
-        return statement
-    }
-
-    @Throws(SQLException::class)
-    private fun showArtists(statement: Statement) {
-        val rs: ResultSet = statement.executeQuery("select * from artists")
-        while (rs.next()) {
-            System.out.println("id = " + rs.getInt("id"))
-            System.out.println("artist = " + rs.getString("artist"))
-            System.out.println("info = " + rs.getString("info"))
-            System.out.println("source = " + rs.getString("source"))
-        }
-    }
-
-    fun testDB() {
-        var connection: Connection? = null
-        try {
-            connection = createConnection()
-            val statement: Statement = createStatement(connection)
-            showArtists(statement)
-        } catch (e: SQLException) {
-            System.err.println(e.getMessage())
-        } finally {
-            try {
-                if (connection != null) connection.close()
-            } catch (e: SQLException) {
-                System.err.println(e)
-            }
-        }
-    }
-
     fun saveArtist(dbHelper: DataBase, artist: String, info: String) {
         val dataBase = dbHelper.writableDatabase
         val values = createValuesOfArtist(artist, info)
@@ -86,13 +42,11 @@ class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
     private fun createValuesOfArtist(artist: String, info: String): ContentValues {
         val values = ContentValues()
-        values.put("artist", artist)
-        values.put("info", info)
-        values.put("source", 1)
+        values.put(ARTIST_COLUMN, artist)
+        values.put(INFO_COLUMN, info)
+        values.put(SOURCE_COLUMN, 1)
         return values
     }
-
-/** -- Fin -- **/
     fun getInfo(dbHelper: DataBase, artist: String): String? {
         val cursor = getCursor(dbHelper, artist)
         val itemsOfCursor = map(cursor)
@@ -121,5 +75,4 @@ class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         cursor.close()
         return itemsOfCursor
     }
-
 }
