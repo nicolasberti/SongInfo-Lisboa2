@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-private const val ARTIST_TABLE = "artist"
+private const val ARTIST_TABLE = "artists"
 private const val ID_COLUMN = "id"
 private const val ARTIST_COLUMN = "artist"
 private const val INFO_COLUMN = "info"
