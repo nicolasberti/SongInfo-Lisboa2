@@ -37,7 +37,7 @@ internal class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_N
     fun saveArtist(dbHelper: DataBase, artist: String, info: String) {
         val dataBase = dbHelper.writableDatabase
         val values = createValuesOfArtist(artist, info)
-        dataBase.insert("artists", null, values)
+        dataBase.insert(ARTIST_TABLE, null, values)
     }
 
     private fun createValuesOfArtist(artist: String, info: String): ContentValues {
@@ -49,7 +49,7 @@ internal class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_N
     }
     fun getInfo(dbHelper: DataBase, artist: String): String? {
         val cursor = getCursor(dbHelper, artist)
-        val itemsOfCursor = map(cursor)
+        val itemsOfCursor = mapCursorToList(cursor)
         return itemsOfCursor.getOrNull(0) ?: null
     }
 
@@ -66,7 +66,7 @@ internal class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         )
     }
 
-    private fun map(cursor: Cursor): List<String> {
+    private fun mapCursorToList(cursor: Cursor): List<String> {
         val itemsOfCursor: MutableList<String> = ArrayList()
         while (cursor.moveToNext()) {
             val info = cursor.getString(cursor.getColumnIndexOrThrow(INFO_COLUMN))
