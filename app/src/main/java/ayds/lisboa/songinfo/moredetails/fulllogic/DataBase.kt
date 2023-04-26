@@ -34,8 +34,8 @@ internal class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_N
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
-    fun saveArtist(dbHelper: DataBase, artist: String, info: String) {
-        val dataBase = dbHelper.writableDatabase
+    fun saveArtist(artist: String, info: String) {
+        val dataBase = this.writableDatabase
         val values = createValuesOfArtist(artist, info)
         dataBase.insert(ARTIST_TABLE, null, values)
     }
@@ -47,14 +47,14 @@ internal class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         values.put(SOURCE_COLUMN, 1)
         return values
     }
-    fun getInfo(dbHelper: DataBase, artist: String): String? {
-        val cursor = getCursor(dbHelper, artist)
+    fun getInfo(artist: String): String? {
+        val cursor = getCursor(artist)
         val itemsOfCursor = mapCursorToList(cursor)
-        return itemsOfCursor.getOrNull(0) ?: null
+        return itemsOfCursor.getOrNull(0)
     }
 
-    private fun getCursor(dbHelper: DataBase, artist: String): Cursor {
-        val dataBase = dbHelper.readableDatabase
+    private fun getCursor(artist: String): Cursor {
+        val dataBase = this.readableDatabase
         return dataBase.query(
             ARTIST_TABLE,
             projection,
