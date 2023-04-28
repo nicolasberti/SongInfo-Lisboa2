@@ -21,18 +21,17 @@ private const val createTableArtists: String =
 
 private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "dictionary.db"
-
-internal class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-
+internal class DataBase(
+    context: Context
+) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     private val projection = arrayOf(
         ID_COLUMN,
         ARTIST_COLUMN,
         INFO_COLUMN
-        )
+    )
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(createTableArtists)
     }
-
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
     fun saveArtist(artist: String, info: String) {
         val dataBase = this.writableDatabase
@@ -65,7 +64,6 @@ internal class DataBase(context: Context) : SQLiteOpenHelper(context, DATABASE_N
             "$ARTIST_COLUMN DESC"
         )
     }
-
     private fun mapCursorToList(cursor: Cursor): List<String> {
         val itemsOfCursor: MutableList<String> = ArrayList()
         while (cursor.moveToNext()) {
