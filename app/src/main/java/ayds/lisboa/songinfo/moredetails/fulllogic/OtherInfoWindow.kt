@@ -31,6 +31,7 @@ class OtherInfoWindow : AppCompatActivity() {
         const val JSON_URL = "url"
         const val JSON_BIO = "bio"
         const val NO_RESULTS = "No results"
+        const val PREFIX_LOCALLY_STORED = "[*]"
     }
 
     internal class ArtistInfo(
@@ -119,9 +120,8 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getInfoFromArtistInfo(artistInfo: ArtistInfo): String{
         var info = artistInfo.info
-        val isLocallyStored = artistInfo.isLocallyStored
-        if (isLocallyStored)
-            info = "[*]$info"
+        if (artistInfo.isLocallyStored)
+            info = PREFIX_LOCALLY_STORED+"$info"
         else if (info == null)
             info = NO_RESULTS
         return info
@@ -163,22 +163,16 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getBioFromArtist(artist: JsonObject?): String? {
         val bio = artist?.get(JSON_BIO)
         val bioJson = bio?.asJsonObject
-        return when(val content = bioJson?.get(JSON_CONTENT)) {
-            null -> null
-            else -> content.asString
-        }
+        val content = bioJson?.get(JSON_CONTENT)
+        return content?.asString
     }
 
     private fun getURLFromArtist(artist: JsonObject?): String? =
-        when(artist) {
-            null -> null
-            else -> artist[JSON_URL].asString
-        }
+        artist?.let { it[JSON_URL].asString }
 
     private fun saveBio(artistName: String, artistInfo: ArtistInfo) {
         val bio = artistInfo.info
-        if (bio != null)
-            dataBase.saveArtist(artistName, bio)
+        bio?.let{ dataBase.saveArtist(artistName, bio) }
     }
 
     private fun setListenerURL(url: String) {
@@ -195,16 +189,13 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun formatInfo(info: String?, artist: String): String? =
-        when (info) {
-            null -> null
-            else -> {
+        info?.let {
                 val textoSinComillas = info.replace("'", " ")
                 val textoConSaltosDeLineaHTML = textoSinComillas.replace("\\n", "<br>")
                 val textoArtistaEnNegrita = textoConSaltosDeLineaHTML.replace("(?i)$artist".toRegex(), "<b>$artist</b>")
                 val artistUpperCase = artist.uppercase(Locale.getDefault())
                 textoArtistaEnNegrita.replace("(?i)$artist".toRegex(), artistUpperCase)
             }
-        }
 
     private fun textToHtml(text: String): String {
         val builder = StringBuilder()
@@ -217,10 +208,9 @@ class OtherInfoWindow : AppCompatActivity() {
 
     @Suppress("DEPRECATION")
     private fun setTextInfoView(info: String?) {
-        val imageUrl = IMAGEN_LASTFM_LOGO
         runOnUiThread {
             val picasso =  Picasso.get()
-            val requestCreator = picasso.load(imageUrl)
+            val requestCreator = picasso.load(IMAGEN_LASTFM_LOGO)
             requestCreator.into(imageView)
             textMoreDetails.text = Html.fromHtml(info)
         }
