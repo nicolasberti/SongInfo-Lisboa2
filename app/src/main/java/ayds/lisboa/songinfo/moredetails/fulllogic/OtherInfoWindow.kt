@@ -76,10 +76,10 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun initThreadInfo() {
         var artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
         artistName = artistName.toString()
-        runThreadInfo(artistName)
+        updateMoreDetailsAsync(artistName)
     }
 
-    private fun runThreadInfo(artistName: String) {
+    private fun updateMoreDetailsAsync(artistName: String) {
         Thread {
             updateMoreDetails(artistName)
         }.start()
