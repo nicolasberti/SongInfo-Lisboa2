@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.lisboa.songinfo.R
-import ayds.lisboa.songinfo.moredetails.fulllogic.DataBase
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
@@ -17,6 +16,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.*
+import ayds.lisboa.songinfo.moredetails.fulllogic.DataBase
+import ayds.lisboa.songinfo.moredetails.fulllogic.model.repository.external.LastFMAPI
 
 class OtherInfoWindow : AppCompatActivity() {
 
