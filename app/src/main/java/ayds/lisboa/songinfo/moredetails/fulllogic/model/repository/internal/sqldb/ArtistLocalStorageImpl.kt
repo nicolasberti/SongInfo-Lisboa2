@@ -40,8 +40,8 @@ internal class ArtistLocalStorageImpl(
         values.put(SOURCE_COLUMN, 1)
         return values
     }
-    override fun getInfo(artist: Artist.ArtistImpl): String? {
-        val cursor = getCursor(artist.name)
+    override fun getArtist(artist: String): Artist.ArtistImpl? {
+        val cursor = getCursor(artist)
         val itemsOfCursor = cursorToArtistMapper.mapCursorToList(cursor)
         return itemsOfCursor.getOrNull(0)
     }
