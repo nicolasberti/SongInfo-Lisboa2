@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic
+package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
 
 import android.content.Intent
 import android.net.Uri
@@ -16,12 +16,12 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.*
-import ayds.lisboa.songinfo.moredetails.fulllogic.DataBase
-import ayds.lisboa.songinfo.moredetails.fulllogic.model.repository.external.LastFMAPI
+import ayds.lisboa.songinfo.moredetails.fulllogic.data.*
+import ayds.lisboa.songinfo.moredetails.fulllogic.domain.*
 
-class OtherInfoWindow : AppCompatActivity() {
-
+class OtherInfoWindow : AppCompatActivity(
     companion object {
+
         const val ARTIST_NAME_EXTRA = "artistName"
         const val IMAGEN_LASTFM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
         const val URL_LASTFMAPI = "https://ws.audioscrobbler.com/2.0/"
