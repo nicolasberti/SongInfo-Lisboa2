@@ -1,8 +1,7 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.model.entities
+package ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities
 
 sealed class Artist {
     data class ArtistImpl(
-        val id: Int,
         val name: String,
         val info: String,
         val source: String,

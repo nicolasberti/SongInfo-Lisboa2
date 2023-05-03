@@ -1,12 +1,12 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.model.repository.internal.sqldb
+package ayds.lisboa.songinfo.moredetails.fulllogic.data.internal.sqldb
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ayds.lisboa.songinfo.moredetails.fulllogic.model.entities.Artist
-import ayds.lisboa.songinfo.moredetails.fulllogic.model.repository.internal.ArtistLocalStorage
+import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
+import ayds.lisboa.songinfo.moredetails.fulllogic.data.internal.ArtistLocalStorage
 
 private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "dictionary.db"
@@ -20,7 +20,8 @@ internal class ArtistLocalStorageImpl(
     private val projection = arrayOf(
         ID_COLUMN,
         ARTIST_COLUMN,
-        INFO_COLUMN
+        INFO_COLUMN,
+        SOURCE_COLUMN
     )
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(createTableArtists)
@@ -29,15 +30,15 @@ internal class ArtistLocalStorageImpl(
 
     override fun saveArtist(artist: Artist.ArtistImpl) {
         val dataBase = this.writableDatabase
-        val values = createValuesOfArtist(artist.name, artist.info)
+        val values = createValuesOfArtist(artist.name, artist.info, artist.source)
         dataBase.insert(ARTIST_TABLE, null, values)
     }
 
-    private fun createValuesOfArtist(artist: String, info: String): ContentValues {
+    private fun createValuesOfArtist(artist: String, info: String, source: String): ContentValues {
         val values = ContentValues()
         values.put(ARTIST_COLUMN, artist)
         values.put(INFO_COLUMN, info)
-        values.put(SOURCE_COLUMN, 1)
+        values.put(SOURCE_COLUMN, source)
         return values
     }
     override fun getArtist(artist: String): Artist.ArtistImpl? {

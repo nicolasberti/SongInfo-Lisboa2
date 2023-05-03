@@ -1,19 +1,16 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.model.repository
+package ayds.lisboa.songinfo.moredetails.fulllogic.data
 
-import ayds.lisboa.songinfo.moredetails.fulllogic.model.entities.Artist
-import ayds.lisboa.songinfo.moredetails.fulllogic.model.repository.external.LastFMService
-import ayds.lisboa.songinfo.moredetails.fulllogic.model.repository.internal.ArtistLocalStorage
+import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
+import ayds.lisboa.songinfo.moredetails.fulllogic.domain.repository.ArtistRepository
+import ayds.lisboa.songinfo.moredetails.fulllogic.data.external.LastFMService
+import ayds.lisboa.songinfo.moredetails.fulllogic.data.internal.ArtistLocalStorage
 
-interface ArtistRepository {
-    fun getInfo(artist: String): Artist
-}
-
-internal class ArtistRepositoryImpl(
+class ArtistRepositoryImpl(
     private val artistLocalStorage: ArtistLocalStorage,
     private val lastFMService: LastFMService
 ) : ArtistRepository {
 
-    override fun getInfo(artist: String): Artist {
+    override fun getArtist(artist: String): Artist {
         var internalArtist = artistLocalStorage.getArtist(artist)
 
         when {
@@ -28,13 +25,13 @@ internal class ArtistRepositoryImpl(
                             internalArtist = externalArtist
                         }
                     }
-                    } catch (e: Exception) {
-                        internalArtist = null
-                    }
+                } catch (e: Exception) {
+                    internalArtist = null
                 }
             }
-            return internalArtist ?: Artist.EmptyArtist
         }
+        return internalArtist ?: Artist.EmptyArtist
+    }
 
 
     private fun markArtistAsLocal(artist: Artist.ArtistImpl) {
