@@ -19,14 +19,8 @@ import ayds.observer.Subject
 
 class OtherInfoWindow: AppCompatActivity(){
     companion object {
-
         const val ARTIST_NAME_EXTRA = "artistName"
-        const val IMAGEN_LASTFM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-        const val HTML_WIDTH = "<html><div width=400>"
-        const val HTML_FONT = "<font face=\"arial\">"
-        const val HTML_END = "</font></div></html>"
-        const val NO_RESULTS = "No results"
-        const val PREFIX_LOCALLY_STORED = "[*]"
+        const val IMAGE_LASTFM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
     }
 
     private lateinit var textMoreDetails: TextView
@@ -36,6 +30,8 @@ class OtherInfoWindow: AppCompatActivity(){
     private val onActionSubject = Subject<OtherInfoUiEvent>()
     val uiEventObservable: Observable<OtherInfoUiEvent> = onActionSubject
     var uiState: OtherInfoUiState = OtherInfoUiState()
+
+    private val formatterInfo = FormatterInfo()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,35 +74,17 @@ class OtherInfoWindow: AppCompatActivity(){
         urlButton = findViewById(R.id.openUrlButton)
     }
 
-    public fun updateViewInfo(artistInfo: Artist.ArtistImpl?){
-        val info = getInfoFromArtistInfo(artistInfo)
-        textToHtml(info)
+   fun updateViewInfo(artistInfo: Artist.ArtistImpl?){
+        val info = formatterInfo.getInfoFromArtistInfo(artistInfo)
+        formatterInfo.textToHtml(info)
         setTextInfoView(info)
-    }
-
-    private fun getInfoFromArtistInfo(artistInfo: Artist.ArtistImpl?): String{
-        var info = artistInfo?.info
-        if (artistInfo?.isLocallyStored == true)
-            info = PREFIX_LOCALLY_STORED+"$info"
-        else if (info == null)
-            info = NO_RESULTS
-        return info
-    }
-
-    private fun textToHtml(text: String): String {
-        val builder = StringBuilder()
-        builder.append(HTML_WIDTH)
-        builder.append(HTML_FONT)
-        builder.append(text)
-        builder.append(HTML_END)
-        return builder.toString()
     }
 
     @Suppress("DEPRECATION")
     private fun setTextInfoView(info: String?) {
         runOnUiThread {
             val picasso =  Picasso.get()
-            val requestCreator = picasso.load(IMAGEN_LASTFM_LOGO)
+            val requestCreator = picasso.load(IMAGE_LASTFM_LOGO)
             requestCreator.into(imageView)
             textMoreDetails.text = Html.fromHtml(info)
         }
