@@ -15,6 +15,8 @@ import ayds.observer.Observer
 interface Presenter {
 
     fun setOtherInfoWindow(otherInfoWindow: OtherInfoWindow)
+
+    fun setArtistInfoRepository(artistInfoRepository: ArtistRepository)
 }
 internal class PresenterImpl: Presenter {
 
@@ -30,6 +32,10 @@ internal class PresenterImpl: Presenter {
         otherInfoWindow.uiEventObservable.subscribe(observer)
     }
 
+    override fun setArtistInfoRepository(artistInfoRepository: ArtistRepository) {
+        this.artistInfoRepository = artistInfoRepository
+    }
+
     private val observer: Observer<OtherInfoUiEvent> =
         Observer { value ->
             when (value) {
@@ -39,7 +45,6 @@ internal class PresenterImpl: Presenter {
         }
 
     private fun openInfoUrl(){
-        Log.e("TAG","EN FUNCION openInfoUrl")
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(otherInfoWindow.uiState.url)
         //startActivity(intent)

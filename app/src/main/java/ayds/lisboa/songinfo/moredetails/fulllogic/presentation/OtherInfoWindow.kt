@@ -1,21 +1,15 @@
 package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
 
-import android.content.Intent
-import android.net.Uri
+
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.lisboa.songinfo.R
-import ayds.lisboa.songinfo.home.view.HomeUiEvent
-import ayds.lisboa.songinfo.home.view.HomeUiState
-import com.google.gson.Gson
-import com.google.gson.JsonObject
+import ayds.lisboa.songinfo.moredetails.fulllogic.MoreDetailsInjector
 import com.squareup.picasso.Picasso
-import retrofit2.Response
 import java.util.*
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.*
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.*
@@ -28,25 +22,13 @@ class OtherInfoWindow: AppCompatActivity(){
 
         const val ARTIST_NAME_EXTRA = "artistName"
         const val IMAGEN_LASTFM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-        const val URL_LASTFMAPI = "https://ws.audioscrobbler.com/2.0/"
         const val HTML_WIDTH = "<html><div width=400>"
         const val HTML_FONT = "<font face=\"arial\">"
         const val HTML_END = "</font></div></html>"
-        const val JSON_ARTIST = "artist"
-        const val JSON_CONTENT = "content"
-        const val JSON_URL = "url"
-        const val JSON_BIO = "bio"
         const val NO_RESULTS = "No results"
         const val PREFIX_LOCALLY_STORED = "[*]"
     }
 
-    internal class ArtistInfo(
-        internal var url: String? = null,
-        internal var info: String? = null,
-        internal var isLocallyStored: Boolean = false
-    )
-
-    private var presenter: Presenter = PresenterImpl()
     private lateinit var textMoreDetails: TextView
     private lateinit var imageView: ImageView
     private lateinit var urlButton: Button
@@ -58,8 +40,8 @@ class OtherInfoWindow: AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
+        initModule()
         initProperties()
-        presenter.setOtherInfoWindow(this) //No iria aca
         initListeners()
         searchAction()
     }
@@ -84,6 +66,10 @@ class OtherInfoWindow: AppCompatActivity(){
     }
     private fun notifyGetInfoAction(){
         onActionSubject.notify(OtherInfoUiEvent.GetInfo)
+    }
+
+    private fun initModule() {
+        MoreDetailsInjector.init(this)
     }
 
     private fun initProperties(){
