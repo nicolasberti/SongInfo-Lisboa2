@@ -13,13 +13,12 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.*
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.*
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.*
+import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
 
-class OtherInfoWindow : AppCompatActivity(
+class OtherInfoWindow: AppCompatActivity(){
     companion object {
 
         const val ARTIST_NAME_EXTRA = "artistName"
@@ -42,8 +41,7 @@ class OtherInfoWindow : AppCompatActivity(
         internal var isLocallyStored: Boolean = false
     )
 
-    private lateinit var dataBase: DataBase
-    private lateinit var lastFMAPI: LastFMAPI
+    private lateinit var presenter: Presenter
     private lateinit var textMoreDetails: TextView
     private lateinit var imageView: ImageView
     private lateinit var urlButton: Button
@@ -52,8 +50,6 @@ class OtherInfoWindow : AppCompatActivity(
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         initProperties()
-        createLastFMAPI()
-        initDataBase()
         initThreadInfo()
     }
 
@@ -61,18 +57,6 @@ class OtherInfoWindow : AppCompatActivity(
         textMoreDetails = findViewById(R.id.textMoreDetails)
         imageView = findViewById(R.id.imageView)
         urlButton = findViewById(R.id.openUrlButton)
-    }
-
-    private fun createLastFMAPI() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(URL_LASTFMAPI)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-        lastFMAPI = retrofit.create(LastFMAPI::class.java)
-    }
-
-    private fun initDataBase() {
-        dataBase = DataBase(this)
     }
 
     private fun initThreadInfo() {
@@ -88,93 +72,33 @@ class OtherInfoWindow : AppCompatActivity(
     }
 
     private fun updateMoreDetails(artistName: String){
-        val artistInfo = getArtistInfo(artistName)
-        updateView(artistInfo)
+        val artistInfo = presenter.getArtistInfo(artistName)
+        updateView(artistInfo as Artist.ArtistImpl?)
     }
 
-    private fun getArtistInfo(artistName : String): ArtistInfo{
-        var artistInfo = getArtistBioFromDatabase(artistName)
-        if (artistInfo.info != null)
-            markArtistInfoAsLocalStored(artistInfo)
-        else {
-            artistInfo = getArtistBioFromAPI(artistName)
-            if (artistInfo.info != null)
-                saveBio(artistName, artistInfo)
-        }
-        return artistInfo
-    }
-
-    private fun updateView(artistInfo: ArtistInfo){
+    private fun updateView(artistInfo: Artist.ArtistImpl?){
         updateViewUrl(artistInfo)
         updateViewInfo(artistInfo)
     }
 
-    private fun updateViewUrl(artistInfo: ArtistInfo){
-        val url = artistInfo.url
+    private fun updateViewUrl(artistInfo: Artist.ArtistImpl?){
+        val url = artistInfo?.source
         url?.let { setListenerURL(it) }
     }
 
-    private fun updateViewInfo(artistInfo: ArtistInfo){
+    private fun updateViewInfo(artistInfo: Artist.ArtistImpl?){
         val info = getInfoFromArtistInfo(artistInfo)
         textToHtml(info)
         setTextInfoView(info)
     }
 
-    private fun getInfoFromArtistInfo(artistInfo: ArtistInfo): String{
-        var info = artistInfo.info
-        if (artistInfo.isLocallyStored)
+    private fun getInfoFromArtistInfo(artistInfo: Artist.ArtistImpl?): String{
+        var info = artistInfo?.info
+        if (artistInfo?.isLocallyStored == true)
             info = PREFIX_LOCALLY_STORED+"$info"
         else if (info == null)
             info = NO_RESULTS
         return info
-    }
-
-    private fun getArtistBioFromAPI(artistName: String): ArtistInfo {
-        val artist = getArtistAPI(artistName)
-        val bio = getBioFromArtist(artist)
-        val info = formatInfo(bio, artistName)
-        val url = getURLFromArtist(artist)
-        return ArtistInfo(url, info, false)
-    }
-
-    private fun markArtistInfoAsLocalStored(artistInfo: ArtistInfo) {
-        artistInfo.isLocallyStored = true
-    }
-
-    private fun getArtistBioFromDatabase(artistName: String): ArtistInfo {
-        val info = dataBase.getInfo(artistName)
-        return ArtistInfo(null, info, info != null)
-    }
-
-    private fun getArtistAPI(artistName: String?): JsonObject? {
-        val callResponse = getSongFromService(artistName)
-        return getSongFromExternalData(callResponse.body())
-    }
-
-    private fun getSongFromExternalData(serviceData: String?): JsonObject? {
-        val gson = Gson()
-        val jobjBody = gson.fromJson(serviceData, JsonObject::class.java)
-        val jobjArtist = jobjBody[JSON_ARTIST]
-        return jobjArtist.asJsonObject
-    }
-
-    private fun getSongFromService(artistName: String?): Response<String> {
-        return lastFMAPI.getArtistInfo(artistName).execute()
-    }
-
-    private fun getBioFromArtist(artist: JsonObject?): String? {
-        val bio = artist?.get(JSON_BIO)
-        val bioJson = bio?.asJsonObject
-        val content = bioJson?.get(JSON_CONTENT)
-        return content?.asString
-    }
-
-    private fun getURLFromArtist(artist: JsonObject?): String? =
-        artist?.let { it[JSON_URL].asString }
-
-    private fun saveBio(artistName: String, artistInfo: ArtistInfo) {
-        val bio = artistInfo.info
-        bio?.let{ dataBase.saveArtist(artistName, bio) }
     }
 
     private fun setListenerURL(url: String) {
@@ -189,15 +113,6 @@ class OtherInfoWindow : AppCompatActivity(
         intent.data = Uri.parse(url)
         startActivity(intent)
     }
-
-    private fun formatInfo(info: String?, artist: String): String? =
-        info?.let {
-                val textoSinComillas = info.replace("'", " ")
-                val textoConSaltosDeLineaHTML = textoSinComillas.replace("\\n", "<br>")
-                val textoArtistaEnNegrita = textoConSaltosDeLineaHTML.replace("(?i)$artist".toRegex(), "<b>$artist</b>")
-                val artistUpperCase = artist.uppercase(Locale.getDefault())
-                textoArtistaEnNegrita.replace("(?i)$artist".toRegex(), artistUpperCase)
-            }
 
     private fun textToHtml(text: String): String {
         val builder = StringBuilder()
