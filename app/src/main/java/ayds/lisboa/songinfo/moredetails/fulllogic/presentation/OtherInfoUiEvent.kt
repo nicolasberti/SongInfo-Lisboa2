@@ -1,3 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
 
-class OtherInfoUiEvent
+sealed class OtherInfoUiEvent {
+
+    object GetInfo : OtherInfoUiEvent()
+    object OpenInfoUrl : OtherInfoUiEvent()
+}

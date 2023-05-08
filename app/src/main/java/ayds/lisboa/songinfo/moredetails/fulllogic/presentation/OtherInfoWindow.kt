@@ -4,11 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.lisboa.songinfo.R
+import ayds.lisboa.songinfo.home.view.HomeUiEvent
+import ayds.lisboa.songinfo.home.view.HomeUiState
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
@@ -17,6 +20,8 @@ import java.util.*
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.*
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.*
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
+import ayds.observer.Observable
+import ayds.observer.Subject
 
 class OtherInfoWindow: AppCompatActivity(){
     companion object {
@@ -41,16 +46,44 @@ class OtherInfoWindow: AppCompatActivity(){
         internal var isLocallyStored: Boolean = false
     )
 
-    private lateinit var presenter: Presenter
+    private var presenter: Presenter = PresenterImpl()
     private lateinit var textMoreDetails: TextView
     private lateinit var imageView: ImageView
     private lateinit var urlButton: Button
+
+    private val onActionSubject = Subject<OtherInfoUiEvent>()
+    val uiEventObservable: Observable<OtherInfoUiEvent> = onActionSubject
+    var uiState: OtherInfoUiState = OtherInfoUiState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         initProperties()
-        initThreadInfo()
+        presenter.setOtherInfoWindow(this) //No iria aca
+        initListeners()
+        searchAction()
+    }
+
+    private fun initListeners(){
+        urlButton.setOnClickListener{ notifyOpenSongAction() }
+    }
+
+    private fun searchAction(){
+        updateSearchTermState()
+        notifyGetInfoAction()
+    }
+
+    private fun updateSearchTermState(){
+        var artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
+        artistName = artistName.toString()
+        uiState = uiState.copy(searchTerm = artistName)
+    }
+
+    private fun notifyOpenSongAction(){
+        onActionSubject.notify(OtherInfoUiEvent.OpenInfoUrl)
+    }
+    private fun notifyGetInfoAction(){
+        onActionSubject.notify(OtherInfoUiEvent.GetInfo)
     }
 
     private fun initProperties(){
@@ -59,34 +92,7 @@ class OtherInfoWindow: AppCompatActivity(){
         urlButton = findViewById(R.id.openUrlButton)
     }
 
-    private fun initThreadInfo() {
-        var artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
-        artistName = artistName.toString()
-        runThreadInfo(artistName)
-    }
-
-    private fun runThreadInfo(artistName: String) {
-        Thread {
-            updateMoreDetails(artistName)
-        }.start()
-    }
-
-    private fun updateMoreDetails(artistName: String){
-        val artistInfo = presenter.getArtistInfo(artistName)
-        updateView(artistInfo as Artist.ArtistImpl?)
-    }
-
-    private fun updateView(artistInfo: Artist.ArtistImpl?){
-        updateViewUrl(artistInfo)
-        updateViewInfo(artistInfo)
-    }
-
-    private fun updateViewUrl(artistInfo: Artist.ArtistImpl?){
-        val url = artistInfo?.source
-        url?.let { setListenerURL(it) }
-    }
-
-    private fun updateViewInfo(artistInfo: Artist.ArtistImpl?){
+    public fun updateViewInfo(artistInfo: Artist.ArtistImpl?){
         val info = getInfoFromArtistInfo(artistInfo)
         textToHtml(info)
         setTextInfoView(info)
@@ -99,19 +105,6 @@ class OtherInfoWindow: AppCompatActivity(){
         else if (info == null)
             info = NO_RESULTS
         return info
-    }
-
-    private fun setListenerURL(url: String) {
-        urlButton.setOnClickListener {
-            listenerURL(url)
-        }
-
-    }
-
-    private fun listenerURL(url: String){
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(url)
-        startActivity(intent)
     }
 
     private fun textToHtml(text: String): String {
