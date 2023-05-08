@@ -13,6 +13,7 @@ import ayds.lisboa.songinfo.moredetails.fulllogic.data.internal.sqldb.CursorToAr
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.repository.ArtistRepository
 import ayds.lisboa.songinfo.moredetails.fulllogic.presentation.OtherInfoWindow
 import ayds.lisboa.songinfo.moredetails.fulllogic.presentation.Presenter
+import ayds.lisboa.songinfo.moredetails.fulllogic.presentation.PresenterImpl
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
@@ -29,18 +30,23 @@ object MoreDetailsInjector {
 
     private var cursorToArtistMapper: CursorToArtistMapper = CursorToArtistMapperImpl()
     private lateinit var lastFMLocalStorage: ArtistLocalStorage
-    private val artistRepository: ArtistRepository = ArtistRepositoryImpl(lastFMLocalStorage, lastFMService)
-    private lateinit var presenter: Presenter
+    private lateinit var artistRepository: ArtistRepository
+    private var presenter: Presenter = PresenterImpl()
     private lateinit var otherInfoWindow: OtherInfoWindow
 
     fun init(otherInfoWindow: OtherInfoWindow){
         this.otherInfoWindow = otherInfoWindow
+        initializeLastFMLocalStorage()
+        initializeArtistRepository()
         presenter.setOtherInfoWindow(otherInfoWindow)
         presenter.setArtistInfoRepository(artistRepository)
-        initializeLastFMLocalStorage()
     }
 
     private fun initializeLastFMLocalStorage(){
         lastFMLocalStorage = ArtistLocalStorageImpl(otherInfoWindow as Context, cursorToArtistMapper)
+    }
+
+    private fun initializeArtistRepository(){
+        artistRepository = ArtistRepositoryImpl(lastFMLocalStorage, lastFMService)
     }
 }
