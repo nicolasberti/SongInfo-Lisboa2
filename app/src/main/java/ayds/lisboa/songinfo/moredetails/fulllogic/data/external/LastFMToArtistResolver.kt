@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 
 interface LastFMToArtistResolver {
-    fun getArtistFromExternalData(serviceData: String?): Artist.ArtistImpl
+    fun getArtistFromExternalData(serviceData: String?): Artist.ArtistImpl?
 }
 
 private const val JSON_ARTIST = "artist"

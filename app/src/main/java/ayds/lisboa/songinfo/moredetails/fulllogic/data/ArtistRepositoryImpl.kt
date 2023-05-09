@@ -1,5 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.fulllogic.data
 
+import android.util.Log
+import ayds.lisboa.songinfo.home.model.entities.Song
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.repository.ArtistRepository
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.external.LastFMService
@@ -11,27 +13,25 @@ class ArtistRepositoryImpl(
 ) : ArtistRepository {
 
     override fun getArtist(artist: String): Artist {
-        var internalArtist = artistLocalStorage.getArtist(artist)
+        var artistInfo = artistLocalStorage.getArtist(artist)
 
         when {
-            internalArtist != null -> markArtistAsLocal(internalArtist)
+            artistInfo != null -> markArtistAsLocal(artistInfo)
             else -> {
                 try {
-                    var externalArtist = lastFMService.getArtist(artist)
+                    artistInfo = lastFMService.getArtist(artist) // Retorna null. Arreglar esto. Puede ser la API o el Injector.
 
-                    (externalArtist as? Artist)?.let {
-                        {
-                            artistLocalStorage.saveArtist(externalArtist)
-                            internalArtist = externalArtist
-                        }
+                    artistInfo?.let {
+                        artistLocalStorage.saveArtist(artistInfo)
                     }
-                } catch (e: Exception) {
-                    internalArtist = null
+                } catch (ioException: Exception) {
+                    ioException.printStackTrace()
                 }
             }
         }
-        return internalArtist ?: Artist.EmptyArtist
+        return artistInfo ?: Artist.EmptyArtist
     }
+
 
 
     private fun markArtistAsLocal(artist: Artist.ArtistImpl) {
