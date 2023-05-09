@@ -1,7 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.fulllogic
 
 import android.content.Context
-import ayds.lisboa.songinfo.home.model.repository.local.spotify.sqldb.CursorToSpotifySongMapperImpl
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.ArtistRepositoryImpl
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.external.*
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.external.JsonToArtistResolver
@@ -11,7 +10,7 @@ import ayds.lisboa.songinfo.moredetails.fulllogic.data.internal.sqldb.ArtistLoca
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.internal.sqldb.CursorToArtistMapper
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.internal.sqldb.CursorToArtistMapperImpl
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.repository.ArtistRepository
-import ayds.lisboa.songinfo.moredetails.fulllogic.presentation.OtherInfoWindow
+import ayds.lisboa.songinfo.moredetails.fulllogic.presentation.OtherInfoView
 import ayds.lisboa.songinfo.moredetails.fulllogic.presentation.Presenter
 import ayds.lisboa.songinfo.moredetails.fulllogic.presentation.PresenterImpl
 import retrofit2.Retrofit
@@ -34,9 +33,9 @@ object MoreDetailsInjector {
     private lateinit var lastFMLocalStorage: ArtistLocalStorage
     private lateinit var artistRepository: ArtistRepository
     private var presenter: Presenter = PresenterImpl()
-    private lateinit var otherInfoWindow: OtherInfoWindow
+    private lateinit var otherInfoWindow: OtherInfoView
 
-    fun init(otherInfoWindow: OtherInfoWindow) {
+    fun init(otherInfoWindow: OtherInfoView) {
         this.otherInfoWindow = otherInfoWindow
         initializeLastFMLocalStorage()
         initializeArtistRepository()

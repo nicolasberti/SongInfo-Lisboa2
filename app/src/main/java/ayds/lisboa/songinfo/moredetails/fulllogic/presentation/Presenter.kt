@@ -1,29 +1,21 @@
 package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
 
-import android.content.Intent
-import android.net.Uri
-import android.util.Log
-import androidx.core.content.ContextCompat.startActivity
-import ayds.lisboa.songinfo.home.controller.HomeController
-import ayds.lisboa.songinfo.home.model.HomeModel
-import ayds.lisboa.songinfo.home.view.HomeUiEvent
-import ayds.lisboa.songinfo.home.view.HomeView
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.repository.ArtistRepository
 import ayds.observer.Observer
 
 interface Presenter {
 
-    fun setOtherInfoWindow(otherInfoWindow: OtherInfoWindow)
+    fun setOtherInfoWindow(otherInfoWindow: OtherInfoView)
 
     fun setArtistInfoRepository(artistInfoRepository: ArtistRepository)
 }
 internal class PresenterImpl: Presenter {
 
-    private lateinit var otherInfoWindow: OtherInfoWindow
+    private lateinit var otherInfoWindow: OtherInfoView
     private lateinit var artistInfoRepository: ArtistRepository
 
-    override fun setOtherInfoWindow(otherInfoWindow: OtherInfoWindow) {
+    override fun setOtherInfoWindow(otherInfoWindow: OtherInfoView) {
         this.otherInfoWindow = otherInfoWindow
         otherInfoWindow.uiEventObservable.subscribe(observer)
     }
@@ -41,9 +33,7 @@ internal class PresenterImpl: Presenter {
         }
 
     private fun openInfoUrl(){
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(otherInfoWindow.uiState.url)
-        //startActivity(intent)
+        otherInfoWindow.openExternalLink(otherInfoWindow.uiState.url)
     }
 
     private fun getInfo(){

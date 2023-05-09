@@ -1,6 +1,8 @@
 package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.widget.Button
@@ -17,7 +19,7 @@ import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
 import ayds.observer.Observable
 import ayds.observer.Subject
 
-class OtherInfoWindow: AppCompatActivity(){
+class OtherInfoView: AppCompatActivity(){
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
         const val IMAGE_LASTFM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
@@ -88,5 +90,11 @@ class OtherInfoWindow: AppCompatActivity(){
             requestCreator.into(imageView)
             textMoreDetails.text = Html.fromHtml(info)
         }
+    }
+
+    fun openExternalLink(songUrl: String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(songUrl)
+        startActivity(intent)
     }
 }
