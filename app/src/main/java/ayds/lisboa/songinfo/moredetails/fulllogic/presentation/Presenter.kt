@@ -23,10 +23,6 @@ internal class PresenterImpl: Presenter {
     private lateinit var otherInfoWindow: OtherInfoWindow
     private lateinit var artistInfoRepository: ArtistRepository
 
-    fun getArtistInfo(artistName: String?): Artist? {
-        return artistName?.let { artistInfoRepository.getArtist(it) }
-    }
-
     override fun setOtherInfoWindow(otherInfoWindow: OtherInfoWindow) {
         this.otherInfoWindow = otherInfoWindow
         otherInfoWindow.uiEventObservable.subscribe(observer)
@@ -51,8 +47,12 @@ internal class PresenterImpl: Presenter {
     }
 
     private fun getInfo(){
-        val artistInfo = Artist.ArtistImpl("Nombre", "Info", "Source", true)
+        val artistInfo = getArtistInfo(otherInfoWindow.uiState.searchTerm)
         otherInfoWindow.updateViewInfo(artistInfo);
+    }
+
+    private fun getArtistInfo(artistName: String): Artist {
+        return artistInfoRepository.getArtist(artistName)
     }
 
 }

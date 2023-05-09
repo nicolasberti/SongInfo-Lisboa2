@@ -12,13 +12,18 @@ class FormatterInfo {
         const val PREFIX_LOCALLY_STORED = "[*]"
     }
 
-    fun getInfoFromArtistInfo(artistInfo: Artist.ArtistImpl?): String{
-        var info = artistInfo?.info
-        if (artistInfo?.isLocallyStored == true)
-            info = PREFIX_LOCALLY_STORED +"$info"
-        else if (info == null)
-            info = NO_RESULTS
-        return info
+    fun getInfoFromArtistInfo(artistInfo: Artist): String{
+       return when (artistInfo){
+            is Artist.EmptyArtist -> NO_RESULTS
+            is Artist.ArtistImpl ->{
+                var info = artistInfo?.info
+                if (artistInfo?.isLocallyStored == true)
+                    info = PREFIX_LOCALLY_STORED +"$info"
+                else if (info == null)
+                    info = NO_RESULTS
+                info
+            }
+        }
     }
 
     fun textToHtml(text: String): String {

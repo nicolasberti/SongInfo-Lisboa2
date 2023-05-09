@@ -74,7 +74,7 @@ class OtherInfoWindow: AppCompatActivity(){
         urlButton = findViewById(R.id.openUrlButton)
     }
 
-   fun updateViewInfo(artistInfo: Artist.ArtistImpl?){
+   fun updateViewInfo(artistInfo: Artist){
         val info = formatterInfo.getInfoFromArtistInfo(artistInfo)
         formatterInfo.textToHtml(info)
         setTextInfoView(info)
