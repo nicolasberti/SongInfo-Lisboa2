@@ -30,11 +30,9 @@ object MoreDetailsInjector {
     private lateinit var artistRepository: ArtistRepository
     private lateinit var otherInfoPresenter: OtherInfoPresenter
     private lateinit var otherInfoWindow: OtherInfoView
-    private val formatterInfo = FormatterInfo()
 
     fun init(otherInfoWindow: OtherInfoView) {
         this.otherInfoWindow = otherInfoWindow
-        otherInfoWindow.setFormatterInfo(formatterInfo)
         initializeLastFMLocalStorage()
         initializeLastFMService()
         initializeArtistRepository()
@@ -66,6 +64,6 @@ object MoreDetailsInjector {
 
     private fun initializePresenter() {
         otherInfoPresenter = OtherInfoPresenterImpl(artistRepository)
-        otherInfoPresenter.setOtherInfoWindow(otherInfoWindow)
+        otherInfoWindow.setPresenter(otherInfoPresenter)
     }
 }

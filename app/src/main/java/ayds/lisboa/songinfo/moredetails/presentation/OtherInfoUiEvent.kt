@@ -2,6 +2,6 @@ package ayds.lisboa.songinfo.moredetails.presentation
 
 sealed class OtherInfoUiEvent {
 
-    object GetInfo : OtherInfoUiEvent()
-    object OpenInfoUrl : OtherInfoUiEvent()
+    object UpdateViewInfo : OtherInfoUiEvent()
+    object UpdateViewUrl : OtherInfoUiEvent()
 }

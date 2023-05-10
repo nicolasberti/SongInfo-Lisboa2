@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
-
+import ayds.observer.Observer
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -15,55 +15,45 @@ import com.squareup.picasso.Picasso
 import java.util.*
 import ayds.lisboa.songinfo.moredetails.data.*
 import ayds.lisboa.songinfo.moredetails.domain.*
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
-import ayds.observer.Observable
-import ayds.observer.Subject
 
-class OtherInfoView: AppCompatActivity(){
+class OtherInfoView: AppCompatActivity(
+){
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
         const val IMAGE_LASTFM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
     }
 
+    private lateinit var otherInfoPresenter: OtherInfoPresenter
     private lateinit var textMoreDetails: TextView
     private lateinit var imageView: ImageView
     private lateinit var urlButton: Button
-
-    private val onActionSubject = Subject<OtherInfoUiEvent>()
-    val uiEventObservable: Observable<OtherInfoUiEvent> = onActionSubject
-    var uiState: OtherInfoUiState = OtherInfoUiState()
-
-    private lateinit var formatterInfo: FormatterInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         initModule()
         initProperties()
+        subscribeEvents()
         initListeners()
         searchAction()
     }
 
+    fun setPresenter(otherInfoPresenter: OtherInfoPresenter){
+         this.otherInfoPresenter = otherInfoPresenter
+    }
+
     private fun initListeners(){
-        urlButton.setOnClickListener{ notifyOpenSongAction() }
+        urlButton.setOnClickListener{ otherInfoPresenter.accionUrl() }
     }
 
     private fun searchAction(){
-        updateSearchTermState()
-        notifyGetInfoAction()
+        val artistName = getSearchTermState()
+        otherInfoPresenter.accionSearch(artistName)
     }
 
-    private fun updateSearchTermState(){
+    private fun getSearchTermState(): String{
         var artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
-        artistName = artistName.toString()
-        uiState = uiState.copy(searchTerm = artistName)
-    }
-
-    private fun notifyOpenSongAction(){
-        onActionSubject.notify(OtherInfoUiEvent.OpenInfoUrl)
-    }
-    private fun notifyGetInfoAction(){
-        onActionSubject.notify(OtherInfoUiEvent.GetInfo)
+        return artistName.toString()
     }
 
     private fun initModule() {
@@ -76,29 +66,30 @@ class OtherInfoView: AppCompatActivity(){
         urlButton = findViewById(R.id.openUrlButton)
     }
 
-   fun updateViewInfo(artistInfo: Artist){
-        val info = formatterInfo.getInfoFromArtistInfo(artistInfo)
-        val infoHtml = formatterInfo.textToHtml(info)
-        setTextInfoView(infoHtml)
-    }
-
     @Suppress("DEPRECATION")
-    private fun setTextInfoView(info: String?) {
+    private fun setTextInfoView() {
         runOnUiThread {
             val picasso =  Picasso.get()
             val requestCreator = picasso.load(IMAGE_LASTFM_LOGO)
             requestCreator.into(imageView)
-            textMoreDetails.text = Html.fromHtml(info)
+            textMoreDetails.text = Html.fromHtml("info de prueba")// Traer de UI)
         }
     }
 
-    fun setFormatterInfo(formatterInfo: FormatterInfo){
-        this.formatterInfo = formatterInfo
-    }
-
-    fun openExternalLink(songUrl: String) {
+    fun openExternalLink() {
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(songUrl)
+        intent.data = Uri.parse("https://www.google.com.ar")// Traer de UI)
         startActivity(intent)
     }
+    private fun subscribeEvents() {
+        otherInfoPresenter.uiEventObservable.subscribe(observer)
+    }
+
+    private val observer: Observer<OtherInfoUiEvent> =
+        Observer { value ->
+            when (value) {
+                OtherInfoUiEvent.UpdateViewUrl -> openExternalLink()
+                OtherInfoUiEvent.UpdateViewInfo -> setTextInfoView()
+            }
+        }
 }
