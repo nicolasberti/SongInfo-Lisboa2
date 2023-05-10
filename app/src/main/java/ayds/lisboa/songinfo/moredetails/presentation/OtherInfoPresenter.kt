@@ -30,8 +30,8 @@ internal class OtherInfoPresenterImpl(
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun accionSearch(artistName: String){
-        //val artistInfo = getArtistInfo(artistName)
-        val artistInfo = Artist.LastFMArtist("name","infoooo","url",2, true)
+        val artistInfo = getArtistInfo(artistName)
+        //val artistInfo = Artist.LastFMArtist("name","infoooo","url",2, true)
         val info = formatInfo(artistInfo)
         updateUiStateInfo(info)
         onActionSubject.notify(OtherInfoUiEvent.UpdateViewInfo)
