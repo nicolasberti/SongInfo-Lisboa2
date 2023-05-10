@@ -10,21 +10,42 @@ interface LastFMToArtistResolver {
 
 private const val JSON_ARTIST = "artist"
 private const val ARTIST_NAME = "name"
-private const val ARTIST_SOURCE = "url"
 private const val ARTIST_BIO = "bio"
 private const val ARTIST_BIO_CONTENT = "content"
+private const val ARTIST_SOURCE = "url"
 
 internal class JsonToArtistResolver : LastFMToArtistResolver {
 
-    override fun getArtistFromExternalData(serviceData: String?): Artist.ArtistImpl {
-        val gson = Gson()
-        val jobjBody = gson.fromJson(serviceData, JsonObject::class.java)
-        val jobjArtist = jobjBody[JSON_ARTIST].asJsonObject
-        val name = jobjArtist.get(ARTIST_NAME).asString
-        val source = jobjArtist.get(ARTIST_SOURCE).asString
-        val jobjBio = jobjArtist[ARTIST_BIO].asJsonObject
-        val content = jobjBio.get(ARTIST_BIO_CONTENT).asString
-        return Artist.ArtistImpl(name, content, source)
+    override fun getArtistFromExternalData(serviceData: String?): Artist.ArtistImpl? {
+        return serviceData?.getArtist()?.let { item ->
+            Artist.ArtistImpl(
+                item.getName(),
+                item.getBioContent(),
+                item.getUrl()
+            )
+        }
+    }
+
+    private fun String?.getArtist(): JsonObject {
+        val jsonServiceData = Gson().fromJson(this, JsonObject::class.java)
+        val jsonArtist = jsonServiceData[JSON_ARTIST]
+        return jsonArtist.asJsonObject
+    }
+
+    private fun JsonObject.getBioContent(): String {
+        val artistBio = this[ARTIST_BIO].asJsonObject
+        val artistBioContent = artistBio[ARTIST_BIO_CONTENT]
+        return artistBioContent.asString
+    }
+
+    private fun JsonObject.getUrl(): String {
+        val artistUrl = this[ARTIST_SOURCE]
+        return artistUrl.asString
+    }
+
+    private fun JsonObject.getName(): String {
+        val artistName = this[ARTIST_NAME]
+        return artistName.asString
     }
 
 
