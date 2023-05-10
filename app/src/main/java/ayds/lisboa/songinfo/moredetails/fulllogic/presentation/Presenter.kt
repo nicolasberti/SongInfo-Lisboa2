@@ -9,16 +9,16 @@ import java.util.concurrent.CompletableFuture
 
 interface Presenter {
 
-    fun setOtherInfoWindow(otherInfoWindow: OtherInfoWindow)
+    fun setOtherInfoWindow(otherInfoWindow: OtherInfoView)
 
     fun setArtistInfoRepository(artistInfoRepository: ArtistRepository)
 }
 internal class PresenterImpl: Presenter {
 
-    private lateinit var otherInfoWindow: OtherInfoWindow
+    private lateinit var otherInfoWindow: OtherInfoView
     private lateinit var artistInfoRepository: ArtistRepository
 
-    override fun setOtherInfoWindow(otherInfoWindow: OtherInfoWindow) {
+    override fun setOtherInfoWindow(otherInfoWindow: OtherInfoView) {
         this.otherInfoWindow = otherInfoWindow
         otherInfoWindow.uiEventObservable.subscribe(observer)
     }
@@ -36,9 +36,7 @@ internal class PresenterImpl: Presenter {
         }
 
     private fun openInfoUrl(){
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(otherInfoWindow.uiState.url)
-        //startActivity(intent)
+        otherInfoWindow.openExternalLink(otherInfoWindow.uiState.url)
     }
 
     private fun getInfo(){
