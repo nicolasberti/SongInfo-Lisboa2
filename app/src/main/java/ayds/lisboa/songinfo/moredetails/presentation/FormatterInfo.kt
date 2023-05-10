@@ -1,6 +1,6 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
+package ayds.lisboa.songinfo.moredetails.presentation
 
-import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
+import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 
 class FormatterInfo {
 
@@ -15,7 +15,7 @@ class FormatterInfo {
     fun getInfoFromArtistInfo(artistInfo: Artist): String{
        return when (artistInfo){
             is Artist.EmptyArtist -> NO_RESULTS
-            is Artist.ArtistImpl ->{
+            is Artist.LastFMArtist ->{
                 var info = artistInfo?.info
                 if (artistInfo?.isLocallyStored == true)
                     info = PREFIX_LOCALLY_STORED +"$info"

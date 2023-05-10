@@ -1,11 +1,11 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.data.external
+package ayds.lisboa.songinfo.moredetails.data.external
 
-import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
+import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 
 interface LastFMToArtistResolver {
-    fun getArtistFromExternalData(serviceData: String?): Artist.ArtistImpl?
+    fun getArtistFromExternalData(serviceData: String?): Artist.LastFMArtist?
 }
 
 private const val JSON_ARTIST = "artist"
@@ -16,12 +16,13 @@ private const val ARTIST_SOURCE = "url"
 
 internal class JsonToArtistResolver : LastFMToArtistResolver {
 
-    override fun getArtistFromExternalData(serviceData: String?): Artist.ArtistImpl? {
+    override fun getArtistFromExternalData(serviceData: String?): Artist.LastFMArtist? {
         return serviceData?.getArtist()?.let { item ->
-            Artist.ArtistImpl(
+            Artist.LastFMArtist(
                 item.getName(),
                 item.getBioContent(),
-                item.getUrl()
+                item.getUrl(),
+                1
             )
         }
     }

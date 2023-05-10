@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
+package ayds.lisboa.songinfo.moredetails.presentation
 
 
 import android.content.Intent
@@ -10,12 +10,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.lisboa.songinfo.R
-import ayds.lisboa.songinfo.moredetails.fulllogic.MoreDetailsInjector
+import ayds.lisboa.songinfo.moredetails.MoreDetailsInjector
 import com.squareup.picasso.Picasso
 import java.util.*
 import ayds.lisboa.songinfo.moredetails.fulllogic.data.*
 import ayds.lisboa.songinfo.moredetails.fulllogic.domain.*
-import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
+import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import ayds.observer.Observable
 import ayds.observer.Subject
 

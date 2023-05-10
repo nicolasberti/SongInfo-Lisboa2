@@ -1,12 +1,12 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.data.internal.sqldb
+package ayds.lisboa.songinfo.moredetails.data.internal.sqldb
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
-import ayds.lisboa.songinfo.moredetails.fulllogic.data.internal.ArtistLocalStorage
+import ayds.lisboa.songinfo.moredetails.data.internal.ArtistLocalStorage
+import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 
 private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "dictionary.db"
@@ -15,12 +15,12 @@ internal class ArtistLocalStorageImpl(
     context: Context,
     private val cursorToArtistMapper: CursorToArtistMapper
 ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION),
-    ArtistLocalStorage
-{
+    ArtistLocalStorage {
     private val projection = arrayOf(
         ID_COLUMN,
         ARTIST_COLUMN,
         INFO_COLUMN,
+        URL_COLUMN,
         SOURCE_COLUMN
     )
     override fun onCreate(db: SQLiteDatabase) {
@@ -28,20 +28,21 @@ internal class ArtistLocalStorageImpl(
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    override fun saveArtist(artist: Artist.ArtistImpl) {
+    override fun saveArtist(artist: Artist.LastFMArtist) {
         val dataBase = this.writableDatabase
-        val values = createValuesOfArtist(artist.name, artist.info, artist.source)
+        val values = createValuesOfArtist(artist.name, artist.info, artist.url)
         dataBase.insert(ARTIST_TABLE, null, values)
     }
 
-    private fun createValuesOfArtist(artist: String, info: String, source: String): ContentValues {
+    private fun createValuesOfArtist(artist: String, info: String, url: String): ContentValues {
         val values = ContentValues()
         values.put(ARTIST_COLUMN, artist)
         values.put(INFO_COLUMN, info)
-        values.put(SOURCE_COLUMN, source)
+        values.put(URL_COLUMN, url)
+        values.put(SOURCE_COLUMN, 1)
         return values
     }
-    override fun getArtist(artist: String): Artist.ArtistImpl? {
+    override fun getArtist(artist: String): Artist.LastFMArtist? {
         val cursor = getCursor(artist)
         val itemsOfCursor = cursorToArtistMapper.mapCursorToList(cursor)
         return itemsOfCursor.getOrNull(0)

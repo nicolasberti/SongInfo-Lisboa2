@@ -1,10 +1,11 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities
+package ayds.lisboa.songinfo.moredetails.domain.entities
 
 sealed class Artist {
-    data class ArtistImpl(
+    data class LastFMArtist(
         val name: String,
         val info: String,
-        val source: String,
+        val url: String,
+        val source: Int,
         var isLocallyStored: Boolean = false
     ) : Artist()
 

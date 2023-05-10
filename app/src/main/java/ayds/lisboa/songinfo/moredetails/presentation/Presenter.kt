@@ -1,9 +1,7 @@
-package ayds.lisboa.songinfo.moredetails.fulllogic.presentation
+package ayds.lisboa.songinfo.moredetails.presentation
 
-import android.content.Intent
-import android.net.Uri
-import ayds.lisboa.songinfo.moredetails.fulllogic.domain.entities.Artist
-import ayds.lisboa.songinfo.moredetails.fulllogic.domain.repository.ArtistRepository
+import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
+import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.observer.Observer
 import java.util.concurrent.CompletableFuture
 
