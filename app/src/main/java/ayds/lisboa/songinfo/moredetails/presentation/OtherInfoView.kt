@@ -72,13 +72,13 @@ class OtherInfoView: AppCompatActivity(
             val picasso =  Picasso.get()
             val requestCreator = picasso.load(IMAGE_LASTFM_LOGO)
             requestCreator.into(imageView)
-            textMoreDetails.text = Html.fromHtml("info de prueba")// Traer de UI)
+            textMoreDetails.text = Html.fromHtml(otherInfoPresenter.uiState.info)
         }
     }
 
     fun openExternalLink() {
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse("https://www.google.com.ar")// Traer de UI)
+        intent.data = Uri.parse(otherInfoPresenter.uiState.info)
         startActivity(intent)
     }
     private fun subscribeEvents() {

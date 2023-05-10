@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture
 
 interface OtherInfoPresenter {
 
-
+    val uiState: OtherInfoUiState
     val uiEventObservable: Observable<OtherInfoUiEvent>
     fun accionSearch(artistName: String)
     fun accionUrl()
@@ -22,7 +22,7 @@ internal class OtherInfoPresenterImpl(
 
     private val onActionSubject = Subject<OtherInfoUiEvent>()
     override val uiEventObservable: Observable<OtherInfoUiEvent> = onActionSubject
-    var uiState: OtherInfoUiState = OtherInfoUiState()
+    override var uiState: OtherInfoUiState = OtherInfoUiState()
 
     override fun accionUrl(){
         onActionSubject.notify(OtherInfoUiEvent.UpdateViewUrl)
@@ -31,8 +31,9 @@ internal class OtherInfoPresenterImpl(
     @RequiresApi(Build.VERSION_CODES.N)
     override fun accionSearch(artistName: String){
         //val artistInfo = getArtistInfo(artistName)
-        //val info = formatInfo(artistInfo)
-        //updateUiStateInfo(info)
+        val artistInfo = Artist.LastFMArtist("name","infoooo","url",2, true)
+        val info = formatInfo(artistInfo)
+        updateUiStateInfo(info)
         onActionSubject.notify(OtherInfoUiEvent.UpdateViewInfo)
     }
 
