@@ -33,7 +33,7 @@ class OtherInfoView: AppCompatActivity(){
     val uiEventObservable: Observable<OtherInfoUiEvent> = onActionSubject
     var uiState: OtherInfoUiState = OtherInfoUiState()
 
-    private val formatterInfo = FormatterInfo()
+    private lateinit var formatterInfo: FormatterInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,8 +78,8 @@ class OtherInfoView: AppCompatActivity(){
 
    fun updateViewInfo(artistInfo: Artist){
         val info = formatterInfo.getInfoFromArtistInfo(artistInfo)
-        formatterInfo.textToHtml(info)
-        setTextInfoView(info)
+        val infoHtml = formatterInfo.textToHtml(info)
+        setTextInfoView(infoHtml)
     }
 
     @Suppress("DEPRECATION")
@@ -90,6 +90,10 @@ class OtherInfoView: AppCompatActivity(){
             requestCreator.into(imageView)
             textMoreDetails.text = Html.fromHtml(info)
         }
+    }
+
+    fun setFormatterInfo(formatterInfo: FormatterInfo){
+        this.formatterInfo = formatterInfo
     }
 
     fun openExternalLink(songUrl: String) {

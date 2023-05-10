@@ -13,18 +13,13 @@ interface Presenter {
 
     fun setArtistInfoRepository(artistInfoRepository: ArtistRepository)
 }
-internal class PresenterImpl: Presenter {
+internal class PresenterImpl(private var artistInfoRepository: ArtistRepository): Presenter {
 
     private lateinit var otherInfoWindow: OtherInfoView
-    private lateinit var artistInfoRepository: ArtistRepository
 
     override fun setOtherInfoWindow(otherInfoWindow: OtherInfoView) {
         this.otherInfoWindow = otherInfoWindow
         otherInfoWindow.uiEventObservable.subscribe(observer)
-    }
-
-    override fun setArtistInfoRepository(artistInfoRepository: ArtistRepository) {
-        this.artistInfoRepository = artistInfoRepository
     }
 
     private val observer: Observer<OtherInfoUiEvent> =
@@ -51,7 +46,4 @@ internal class PresenterImpl: Presenter {
         }
         return future.get()
     }
-
-
-
 }
