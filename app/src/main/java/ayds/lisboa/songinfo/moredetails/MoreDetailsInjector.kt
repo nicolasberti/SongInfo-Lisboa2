@@ -11,8 +11,8 @@ import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToArtistMapper
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.lisboa.songinfo.moredetails.presentation.FormatterInfo
 import ayds.lisboa.songinfo.moredetails.presentation.OtherInfoView
-import ayds.lisboa.songinfo.moredetails.presentation.Presenter
-import ayds.lisboa.songinfo.moredetails.presentation.PresenterImpl
+import ayds.lisboa.songinfo.moredetails.presentation.OtherInfoPresenter
+import ayds.lisboa.songinfo.moredetails.presentation.OtherInfoPresenterImpl
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
@@ -28,7 +28,7 @@ object MoreDetailsInjector {
     private lateinit var lastFMLocalStorage: ArtistLocalStorage
 
     private lateinit var artistRepository: ArtistRepository
-    private lateinit var presenter: Presenter
+    private lateinit var otherInfoPresenter: OtherInfoPresenter
     private lateinit var otherInfoWindow: OtherInfoView
     private val formatterInfo = FormatterInfo()
 
@@ -65,7 +65,7 @@ object MoreDetailsInjector {
     }
 
     private fun initializePresenter() {
-        presenter = PresenterImpl(artistRepository)
-        presenter.setOtherInfoWindow(otherInfoWindow)
+        otherInfoPresenter = OtherInfoPresenterImpl(artistRepository)
+        otherInfoPresenter.setOtherInfoWindow(otherInfoWindow)
     }
 }

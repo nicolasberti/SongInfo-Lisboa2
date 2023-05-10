@@ -5,12 +5,12 @@ import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.observer.Observer
 import java.util.concurrent.CompletableFuture
 
-interface Presenter {
+interface OtherInfoPresenter {
 
     fun setOtherInfoWindow(otherInfoWindow: OtherInfoView)
 
 }
-internal class PresenterImpl(private var artistInfoRepository: ArtistRepository): Presenter {
+internal class OtherInfoPresenterImpl(private var artistInfoRepository: ArtistRepository): OtherInfoPresenter {
 
     private lateinit var otherInfoWindow: OtherInfoView
 
