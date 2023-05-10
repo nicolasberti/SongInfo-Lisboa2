@@ -5,36 +5,38 @@ import androidx.annotation.RequiresApi
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.observer.Observable
-import ayds.observer.Observer
 import ayds.observer.Subject
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 interface OtherInfoPresenter {
 
-    val uiState: OtherInfoUiState
-    val uiEventObservable: Observable<OtherInfoUiEvent>
-    fun accionSearch(artistName: String)
-    fun accionUrl()
+    val uiEventObservable: Observable<OtherInfoUiState>
+    fun actionSearch(artistName: String)
 }
 internal class OtherInfoPresenterImpl(
-    private var artistInfoRepository: ArtistRepository
-    ): OtherInfoPresenter {
+    private var artistInfoRepository: ArtistRepository,
+    private var artistInfoRetriever: ArtistInfoRetriever
+): OtherInfoPresenter {
 
-    private val onActionSubject = Subject<OtherInfoUiEvent>()
-    override val uiEventObservable: Observable<OtherInfoUiEvent> = onActionSubject
-    override var uiState: OtherInfoUiState = OtherInfoUiState()
-
-    override fun accionUrl(){
-        onActionSubject.notify(OtherInfoUiEvent.UpdateViewUrl)
-    }
+    private val onActionSubject = Subject<OtherInfoUiState>()
+    override val uiEventObservable = onActionSubject
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun accionSearch(artistName: String){
+    override fun actionSearch(artistName: String){
         val artistInfo = getArtistInfo(artistName)
-        //val artistInfo = Artist.LastFMArtist("name","infoooo","url",2, true)
-        val info = formatInfo(artistInfo)
-        updateUiStateInfo(info)
-        onActionSubject.notify(OtherInfoUiEvent.UpdateViewInfo)
+        val uiState = getUiState(artistInfo, artistName)
+        notifyState(uiState)
+    }
+
+    private fun getUiState(artistInfo: Artist, artistName: String): OtherInfoUiState{
+        val info = artistInfoRetriever.getFormattedInfo(artistInfo, artistName)
+        val url = artistInfoRetriever.getUrl(artistInfo)
+        return OtherInfoUiState(info, url)
+    }
+
+    private fun notifyState(uiState: OtherInfoUiState){
+        uiEventObservable.notify(uiState)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -43,46 +45,6 @@ internal class OtherInfoPresenterImpl(
             artistInfoRepository.getArtist(artistName)
         }
         return future.get()
-    }
-
-    private fun updateUiStateInfo(informacion: String){
-        uiState = uiState.copy(info = informacion)
-    }
-
-    fun formatInfo(artistInfo: Artist): String{
-        val info = getInfoFromArtistInfo(artistInfo)
-        return textToHtml(info)
-    }
-
-    companion object {
-        const val HTML_WIDTH = "<html><div width=400>"
-        const val HTML_FONT = "<font face=\"arial\">"
-        const val HTML_END = "</font></div></html>"
-        const val NO_RESULTS = "No results"
-        const val PREFIX_LOCALLY_STORED = "[*]"
-    }
-
-    fun textToHtml(text: String): String {
-        val builder = StringBuilder()
-        builder.append(HTML_WIDTH)
-        builder.append(HTML_FONT)
-        builder.append(text)
-        builder.append(HTML_END)
-        return builder.toString()
-    }
-
-    fun getInfoFromArtistInfo(artistInfo: Artist): String{
-        return when (artistInfo){
-            is Artist.EmptyArtist -> NO_RESULTS
-            is Artist.LastFMArtist ->{
-                var info = artistInfo?.info
-                if (artistInfo?.isLocallyStored == true)
-                    info = PREFIX_LOCALLY_STORED +"$info"
-                else if (info == null)
-                    info = NO_RESULTS
-                info
-            }
-        }
     }
 
 }

@@ -9,7 +9,7 @@ import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.ArtistLocalStorageIm
 import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToArtistMapper
 import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToArtistMapperImpl
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.lisboa.songinfo.moredetails.presentation.FormatterInfo
+import ayds.lisboa.songinfo.moredetails.presentation.ArtistInfoRetriever
 import ayds.lisboa.songinfo.moredetails.presentation.OtherInfoView
 import ayds.lisboa.songinfo.moredetails.presentation.OtherInfoPresenter
 import ayds.lisboa.songinfo.moredetails.presentation.OtherInfoPresenterImpl
@@ -30,6 +30,8 @@ object MoreDetailsInjector {
     private lateinit var artistRepository: ArtistRepository
     private lateinit var otherInfoPresenter: OtherInfoPresenter
     private lateinit var otherInfoWindow: OtherInfoView
+
+    private val artistInfoRetriever = ArtistInfoRetriever()
 
     fun init(otherInfoWindow: OtherInfoView) {
         this.otherInfoWindow = otherInfoWindow
@@ -63,7 +65,7 @@ object MoreDetailsInjector {
     }
 
     private fun initializePresenter() {
-        otherInfoPresenter = OtherInfoPresenterImpl(artistRepository)
+        otherInfoPresenter = OtherInfoPresenterImpl(artistRepository, artistInfoRetriever)
         otherInfoWindow.setPresenter(otherInfoPresenter)
     }
 }

@@ -1,8 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
 import ayds.observer.Observer
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.widget.Button
@@ -15,6 +13,7 @@ import com.squareup.picasso.Picasso
 import java.util.*
 import ayds.lisboa.songinfo.moredetails.data.*
 import ayds.lisboa.songinfo.moredetails.domain.*
+import ayds.lisboa.songinfo.utils.UtilsInjector.navigationUtils
 
 class OtherInfoView: AppCompatActivity(
 ){
@@ -34,7 +33,6 @@ class OtherInfoView: AppCompatActivity(
         initModule()
         initProperties()
         subscribeEvents()
-        initListeners()
         searchAction()
     }
 
@@ -42,17 +40,13 @@ class OtherInfoView: AppCompatActivity(
          this.otherInfoPresenter = otherInfoPresenter
     }
 
-    private fun initListeners(){
-        urlButton.setOnClickListener{ otherInfoPresenter.accionUrl() }
-    }
-
     private fun searchAction(){
         val artistName = getSearchTermState()
-        otherInfoPresenter.accionSearch(artistName)
+        otherInfoPresenter.actionSearch(artistName)
     }
 
     private fun getSearchTermState(): String{
-        var artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
+        val artistName = intent.getStringExtra(ARTIST_NAME_EXTRA)
         return artistName.toString()
     }
 
@@ -67,29 +61,28 @@ class OtherInfoView: AppCompatActivity(
     }
 
     @Suppress("DEPRECATION")
-    private fun setTextInfoView() {
+    private fun setTextInfoView(info: String) {
         runOnUiThread {
             val picasso =  Picasso.get()
             val requestCreator = picasso.load(IMAGE_LASTFM_LOGO)
             requestCreator.into(imageView)
-            textMoreDetails.text = Html.fromHtml(otherInfoPresenter.uiState.info)
+            textMoreDetails.text = Html.fromHtml(info)
         }
     }
 
-    fun openExternalLink() {
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(otherInfoPresenter.uiState.info)
-        startActivity(intent)
-    }
     private fun subscribeEvents() {
         otherInfoPresenter.uiEventObservable.subscribe(observer)
     }
 
-    private val observer: Observer<OtherInfoUiEvent> =
-        Observer { value ->
-            when (value) {
-                OtherInfoUiEvent.UpdateViewUrl -> openExternalLink()
-                OtherInfoUiEvent.UpdateViewInfo -> setTextInfoView()
-            }
-        }
+    private val observer: Observer<OtherInfoUiState> =
+        Observer { value -> updateView(value) }
+
+    private fun updateView(uiState: OtherInfoUiState){
+        setTextInfoView(uiState.info)
+        updateListenerUrl(uiState.url)
+    }
+
+    private fun updateListenerUrl(url: String) {
+        urlButton.setOnClickListener { navigationUtils.openExternalUrl(this, url) }
+    }
 }
