@@ -7,7 +7,7 @@ import ayds.lisboa.songinfo.moredetails.data.internal.ArtistLocalStorage
 
 class ArtistRepositoryImpl(
     private val artistLocalStorage: ArtistLocalStorage,
-    private val artistService: ArtistService //cambiar generico
+    private val artistService: ArtistService
 ) : ArtistRepository {
 
     override fun getArtist(artist: String): Artist {

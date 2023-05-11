@@ -7,10 +7,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import ayds.lisboa.songinfo.moredetails.data.internal.ArtistLocalStorage
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
-
-private const val DATABASE_VERSION = 1
-private const val DATABASE_NAME = "dictionary.db"
-
 internal class ArtistLocalStorageImpl(
     context: Context,
     private val cursorToArtistMapper: CursorToArtistMapper
