@@ -3,7 +3,12 @@ package ayds.lisboa.songinfo.moredetails.presentation
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 import java.util.*
 
-class ArtistInfoRetriever {
+interface ArtistInfoResolver {
+    fun getFormattedInfo(artistInfo: Artist, artistName: String): String
+    fun getUrl(artistInfo: Artist): String
+}
+
+class ArtistInfoResolverImpl : ArtistInfoResolver {
 
     companion object {
         const val HTML_WIDTH = "<html><div width=400>"
@@ -14,13 +19,13 @@ class ArtistInfoRetriever {
         const val PREFIX_LOCALLY_STORED = "[*]"
     }
 
-    fun getFormattedInfo(artistInfo: Artist, artistName: String): String{
+    override fun getFormattedInfo(artistInfo: Artist, artistName: String): String{
         val info = getInfoFromArtistInfo(artistInfo)
         val infoFormatted = formatInfo(info, artistName)
         return textToHtml(infoFormatted)
     }
 
-    fun getUrl(artistInfo: Artist): String =
+    override fun getUrl(artistInfo: Artist): String =
         when (artistInfo) {
             is Artist.EmptyArtist -> NO_RESULTS_URL
             is Artist.LastFMArtist -> artistInfo.url

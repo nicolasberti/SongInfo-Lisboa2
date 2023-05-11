@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails
+package ayds.lisboa.songinfo.moredetails.dependencyInjector
 
 import android.content.Context
 import ayds.lisboa.songinfo.moredetails.data.ArtistRepositoryImpl
@@ -9,9 +9,7 @@ import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.ArtistLocalStorageIm
 import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToArtistMapper
 import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToArtistMapperImpl
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.lisboa.songinfo.moredetails.presentation.ArtistInfoRetriever
-import ayds.lisboa.songinfo.moredetails.presentation.OtherInfoView
-import ayds.lisboa.songinfo.moredetails.presentation.OtherInfoPresenter
+import ayds.lisboa.songinfo.moredetails.presentation.*
 import ayds.lisboa.songinfo.moredetails.presentation.OtherInfoPresenterImpl
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -31,7 +29,7 @@ object MoreDetailsInjector {
     private lateinit var otherInfoPresenter: OtherInfoPresenter
     private lateinit var otherInfoWindow: OtherInfoView
 
-    private val artistInfoRetriever = ArtistInfoRetriever()
+    private val artistInfoResolver = ArtistInfoResolverImpl()
 
     fun init(otherInfoWindow: OtherInfoView) {
         this.otherInfoWindow = otherInfoWindow
@@ -65,7 +63,7 @@ object MoreDetailsInjector {
     }
 
     private fun initializePresenter() {
-        otherInfoPresenter = OtherInfoPresenterImpl(artistRepository, artistInfoRetriever)
+        otherInfoPresenter = OtherInfoPresenterImpl(artistRepository, artistInfoResolver)
         otherInfoWindow.setPresenter(otherInfoPresenter)
     }
 }

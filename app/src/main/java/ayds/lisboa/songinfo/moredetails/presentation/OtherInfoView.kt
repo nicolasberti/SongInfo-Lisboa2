@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.lisboa.songinfo.R
-import ayds.lisboa.songinfo.moredetails.MoreDetailsInjector
+import ayds.lisboa.songinfo.moredetails.dependencyInjector.MoreDetailsInjector
 import com.squareup.picasso.Picasso
 import java.util.*
 import ayds.lisboa.songinfo.moredetails.data.*
@@ -19,7 +19,6 @@ class OtherInfoView: AppCompatActivity(
 ){
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
-        const val IMAGE_LASTFM_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
     }
 
     private lateinit var otherInfoPresenter: OtherInfoPresenter
@@ -60,16 +59,6 @@ class OtherInfoView: AppCompatActivity(
         urlButton = findViewById(R.id.openUrlButton)
     }
 
-    @Suppress("DEPRECATION")
-    private fun setTextInfoView(info: String) {
-        runOnUiThread {
-            val picasso =  Picasso.get()
-            val requestCreator = picasso.load(IMAGE_LASTFM_LOGO)
-            requestCreator.into(imageView)
-            textMoreDetails.text = Html.fromHtml(info)
-        }
-    }
-
     private fun subscribeEvents() {
         otherInfoPresenter.uiEventObservable.subscribe(observer)
     }
@@ -78,8 +67,22 @@ class OtherInfoView: AppCompatActivity(
         Observer { value -> updateView(value) }
 
     private fun updateView(uiState: OtherInfoUiState){
-        setTextInfoView(uiState.info)
-        updateListenerUrl(uiState.url)
+        runOnUiThread {
+            setImageView(uiState.lastFMImage)
+            setTextInfoView(uiState.info)
+            updateListenerUrl(uiState.url)
+        }
+    }
+
+    private fun setImageView(image: String){
+        val picasso =  Picasso.get()
+        val requestCreator = picasso.load(image)
+        requestCreator.into(imageView)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setTextInfoView(info: String) {
+        textMoreDetails.text = Html.fromHtml(info)
     }
 
     private fun updateListenerUrl(url: String) {
