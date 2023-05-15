@@ -9,7 +9,7 @@ import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import org.junit.Assert
 import org.junit.Test
-import java.lang.Exception
+import java.io.IOException
 
 class ArtistRepositoryTest {
     private val artistLocalStorage: ArtistLocalStorage = mockk(relaxUnitFun = true)
@@ -20,8 +20,9 @@ class ArtistRepositoryTest {
     }
 
     @Test
-    fun `given non existing artist by name should return empty artist`() {
+    fun `given non existing artist in local storage and external service by name should return empty artist`() {
         every { artistLocalStorage.getArtist("name") } returns null
+        every { artistService.getArtist("name") } returns null
 
         val result = artistRepository.getArtist("name")
 
@@ -30,22 +31,43 @@ class ArtistRepositoryTest {
 
     @Test
     fun `given existing artist by name should return artist`() {
-        val artist: Artist.LastFMArtist = mockk()
+        val artist = Artist.LastFMArtist(
+            "name",
+            "info",
+            "url",
+            1,
+            false
+        )
         every { artistLocalStorage.getArtist("name") } returns artist
 
-        val result = artistRepository.getArtist("id")
+        val result = artistRepository.getArtist("name")
 
         Assert.assertEquals(artist, result)
     }
 
+
+
     @Test
     fun `given service exception should return empty artist`() {
         every { artistLocalStorage.getArtist("name") } returns null
-        every { artistService.getArtist("name") } throws mockk<Exception>()
+        every { artistService.getArtist("name") } throws IOException()
 
         val result = artistRepository.getArtist("name")
 
         Assert.assertEquals(Artist.EmptyArtist, result)
+    }
+
+
+
+    @Test
+    fun `given non existing artist in local storage but existing in external service by name should return artist`() {
+        val artist: Artist.LastFMArtist = mockk()
+        every { artistLocalStorage.getArtist("name") } returns null
+        every { artistService.getArtist("name") } returns artist
+
+        val result = artistRepository.getArtist("name")
+
+        Assert.assertEquals(artist, result)
     }
 
 }
