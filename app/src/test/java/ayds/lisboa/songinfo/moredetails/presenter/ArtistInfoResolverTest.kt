@@ -92,4 +92,29 @@ class ArtistInfoResolverTest {
         assertEquals(expected, result)
     }
 
+    @Test
+    fun `given artist info and artist is EmptyArtist, when getUrl is called, then returns no results`() {
+        // Arrange
+        val artistInfo = EmptyArtist
+
+        // Act
+        val result = artistInfoResolver.getUrl(artistInfo)
+
+        //Assert
+        val expected = "URL NOT FOUND"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `given artist info and artist is LastFMArtist, when getUrl is called, then returns url`() {
+        // Arrange
+        val artistInfo = LastFMArtist("Test artist", "Test info","https://www.google.com.ar",1,true)
+
+        // Act
+        val result = artistInfoResolver.getUrl(artistInfo)
+
+        //Assert
+        val expected = "https://www.google.com.ar"
+        assertEquals(expected, result)
+    }
 }
