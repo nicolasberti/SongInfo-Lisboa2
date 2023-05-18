@@ -1,20 +1,22 @@
 package ayds.lisboa.songinfo.home.view
 
+import ConverterYearImpl
 import DateConverterFactory
-import DateConverterFactoryImpl
 import ayds.lisboa.songinfo.home.model.entities.Song
 import ayds.lisboa.songinfo.home.model.entities.Song.SpotifySong
 import io.mockk.mockk
+import io.mockk.every
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class SongDescriptionHelperTest {
 
-    private val dateConverter: DateConverterFactory = DateConverterFactoryImpl()
+    private val dateConverter: DateConverterFactory = mockk(relaxUnitFun = true)
     private val songDescriptionHelper by lazy { SongDescriptionHelperImpl(dateConverter) }
 
     @Test
     fun `given a local song it should return the description`() {
+        every {dateConverter.create("year")} returns ConverterYearImpl()
         val song: Song = SpotifySong(
             "id",
             "Plush",
@@ -40,6 +42,7 @@ class SongDescriptionHelperTest {
 
     @Test
     fun `given a non local song it should return the description`() {
+        every {dateConverter.create("year")} returns ConverterYearImpl()
         val song: Song = SpotifySong(
             "id",
             "Plush",
