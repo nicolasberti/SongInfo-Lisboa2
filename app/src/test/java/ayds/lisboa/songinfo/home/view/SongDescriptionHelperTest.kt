@@ -12,11 +12,14 @@ import org.junit.Test
 class SongDescriptionHelperTest {
 
     private val dateConverter: DateConverterFactory = mockk(relaxUnitFun = true)
+    private val dateConverterYearImpl : ConverterYearImpl = mockk()
     private val songDescriptionHelper by lazy { SongDescriptionHelperImpl(dateConverter) }
 
     @Test
     fun `given a local song it should return the description`() {
-        every {dateConverter.create("year")} returns ConverterYearImpl()
+        every {dateConverter.create("year")} returns dateConverterYearImpl
+        every{ dateConverterYearImpl.getReleaseDate("1992-01-01")} returns "1992 (leap year)"
+
         val song: Song = SpotifySong(
             "id",
             "Plush",
@@ -42,7 +45,9 @@ class SongDescriptionHelperTest {
 
     @Test
     fun `given a non local song it should return the description`() {
-        every {dateConverter.create("year")} returns ConverterYearImpl()
+        every {dateConverter.create("year")} returns dateConverterYearImpl
+        every{ dateConverterYearImpl.getReleaseDate("1992-01-01")} returns "1992 (leap year)"
+
         val song: Song = SpotifySong(
             "id",
             "Plush",
