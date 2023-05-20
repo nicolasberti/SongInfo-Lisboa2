@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.home.view
 
-import ConverterYearImpl
+import Converter
 import DateConverterFactory
 import ayds.lisboa.songinfo.home.model.entities.Song
 import ayds.lisboa.songinfo.home.model.entities.Song.SpotifySong
@@ -11,14 +11,14 @@ import org.junit.Test
 
 class SongDescriptionHelperTest {
 
-    private val dateConverter: DateConverterFactory = mockk(relaxUnitFun = true)
-    private val dateConverterYearImpl : ConverterYearImpl = mockk()
-    private val songDescriptionHelper by lazy { SongDescriptionHelperImpl(dateConverter) }
+    private val dateConverterFactory: DateConverterFactory = mockk(relaxUnitFun = true)
+    private val dateConverter: Converter = mockk()
+    private val songDescriptionHelper by lazy { SongDescriptionHelperImpl(dateConverterFactory) }
 
     @Test
     fun `given a local song it should return the description`() {
-        every {dateConverter.create("year")} returns dateConverterYearImpl
-        every{ dateConverterYearImpl.getReleaseDate("1992-01-01")} returns "1992 (leap year)"
+        every {dateConverterFactory.create("year")} returns dateConverter
+        every{ dateConverter.getReleaseDate("1992-01-01")} returns "1992 (leap year)"
 
         val song: Song = SpotifySong(
             "id",
@@ -45,8 +45,8 @@ class SongDescriptionHelperTest {
 
     @Test
     fun `given a non local song it should return the description`() {
-        every {dateConverter.create("year")} returns dateConverterYearImpl
-        every{ dateConverterYearImpl.getReleaseDate("1992-01-01")} returns "1992 (leap year)"
+        every {dateConverterFactory.create("year")} returns dateConverter
+        every{ dateConverter.getReleaseDate("1992-01-01")} returns "1992 (leap year)"
 
         val song: Song = SpotifySong(
             "id",
