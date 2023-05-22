@@ -1,3 +1,3 @@
 [submodule "libs/LastFMService"]
 	path = libs/LastFMService
-	url = git@github.com:nicolasberti/AyDS-LastFM-Lisboa2
+	url = https://github.com/nicolasberti/AyDS-LastFM-Lisboa2
