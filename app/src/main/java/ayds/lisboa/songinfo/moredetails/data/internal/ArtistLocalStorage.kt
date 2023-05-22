@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.data.internal
 
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
+import ayds.lastfmservice.Artist
 
 interface ArtistLocalStorage {
 

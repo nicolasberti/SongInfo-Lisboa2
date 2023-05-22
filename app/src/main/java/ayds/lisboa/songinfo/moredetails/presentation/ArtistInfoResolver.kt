@@ -1,6 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
+import ayds.lastfmservice.Artist
 import java.util.*
 
 interface ArtistInfoResolver {

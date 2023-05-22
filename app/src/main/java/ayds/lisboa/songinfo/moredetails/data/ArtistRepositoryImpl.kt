@@ -1,7 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.data
 
-import ayds.lisboa.songinfo.moredetails.data.external.ArtistService
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
+import ayds.lastfmservice.Artist
+import ayds.lastfmservice.external.ArtistService
 import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
 import ayds.lisboa.songinfo.moredetails.data.internal.ArtistLocalStorage
 
@@ -17,9 +17,8 @@ class ArtistRepositoryImpl(
             else -> {
                 try {
                     artistInfo = artistService.getArtist(artist)
-                    artistInfo?.let {
+                    if(artistInfo != null)
                         artistLocalStorage.saveArtist(artistInfo)
-                    }
                 } catch (ioException: Exception) {
                     ioException.printStackTrace()
                 }

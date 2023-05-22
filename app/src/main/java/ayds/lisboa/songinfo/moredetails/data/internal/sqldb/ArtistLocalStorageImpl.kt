@@ -5,8 +5,8 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import ayds.lastfmservice.Artist
 import ayds.lisboa.songinfo.moredetails.data.internal.ArtistLocalStorage
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
 internal class ArtistLocalStorageImpl(
     context: Context,
     private val cursorToArtistMapper: CursorToArtistMapper

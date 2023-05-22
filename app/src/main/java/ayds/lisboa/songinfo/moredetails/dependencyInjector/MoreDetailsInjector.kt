@@ -2,8 +2,6 @@ package ayds.lisboa.songinfo.moredetails.dependencyInjector
 
 import android.content.Context
 import ayds.lisboa.songinfo.moredetails.data.ArtistRepositoryImpl
-import ayds.lisboa.songinfo.moredetails.data.external.*
-import ayds.lisboa.songinfo.moredetails.data.external.JsonToArtistResolver
 import ayds.lisboa.songinfo.moredetails.data.internal.ArtistLocalStorage
 import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.ArtistLocalStorageImpl
 import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToArtistMapper
@@ -18,9 +16,9 @@ private const val LASTFM_URL = "https://ws.audioscrobbler.com/2.0/"
 
 object MoreDetailsInjector {
 
-    private lateinit var lastFMAPI: LastFMAPI
-    private lateinit var lastFMToArtistResolver: LastFMToArtistResolver
-    private lateinit var artistService: ArtistService
+    private lateinit var lastFMAPI: ayds.lastfmservice.external.LastFMAPI
+    private lateinit var lastFMToArtistResolver: ayds.lastfmservice.external.LastFMToArtistResolver
+    private lateinit var artistService: ayds.lastfmservice.external.ArtistService
 
     private lateinit var cursorToArtistMapper: CursorToArtistMapper
     private lateinit var lastFMLocalStorage: ArtistLocalStorage
@@ -46,16 +44,17 @@ object MoreDetailsInjector {
 
     private fun initializeLastFMService() {
         lastFMAPI = getLastFMAPI()
-        lastFMToArtistResolver = JsonToArtistResolver()
-        artistService = ArtistServiceImpl(lastFMAPI, lastFMToArtistResolver)
+        lastFMToArtistResolver = ayds.lastfmservice.external.JsonToArtistResolver()
+        artistService =
+            ayds.lastfmservice.external.ArtistServiceImpl(lastFMAPI, lastFMToArtistResolver)
     }
 
-    private fun getLastFMAPI(): LastFMAPI {
+    private fun getLastFMAPI(): ayds.lastfmservice.external.LastFMAPI {
         return Retrofit.Builder()
             .baseUrl(LASTFM_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
-            .create(LastFMAPI::class.java)
+            .create(ayds.lastfmservice.external.LastFMAPI::class.java)
     }
 
     private fun initializeArtistRepository() {

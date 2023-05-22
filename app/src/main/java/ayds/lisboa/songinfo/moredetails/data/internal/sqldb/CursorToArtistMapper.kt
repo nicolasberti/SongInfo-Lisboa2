@@ -1,7 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.data.internal.sqldb
 
 import android.database.Cursor
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
+import ayds.lastfmservice.Artist
 
 interface CursorToArtistMapper {
 
