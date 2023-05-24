@@ -23,6 +23,7 @@ class OtherInfoView: AppCompatActivity(
 
     private lateinit var otherInfoPresenter: OtherInfoPresenter
     private lateinit var textMoreDetails: TextView
+    private lateinit var textSource: TextView
     private lateinit var imageView: ImageView
     private lateinit var urlButton: Button
 
@@ -54,9 +55,11 @@ class OtherInfoView: AppCompatActivity(
     }
 
     private fun initProperties(){
+        textSource = findViewById(R.id.textSource)
         textMoreDetails = findViewById(R.id.textMoreDetails)
         imageView = findViewById(R.id.imageView)
         urlButton = findViewById(R.id.openUrlButton)
+        setTextSourceView("Source: prueba") // borrar
     }
 
     private fun subscribeEvents() {
@@ -83,6 +86,12 @@ class OtherInfoView: AppCompatActivity(
     @Suppress("DEPRECATION")
     private fun setTextInfoView(info: String) {
         textMoreDetails.text = Html.fromHtml(info)
+
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setTextSourceView(source: String) { // Método para cambiar el texto al "source" de moredetails
+        textSource.text = Html.fromHtml(source)
     }
 
     private fun updateListenerUrl(url: String) {
