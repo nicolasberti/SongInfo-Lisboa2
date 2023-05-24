@@ -1,7 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.presenter
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist
-import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
 import ayds.lisboa.songinfo.moredetails.presentation.*
 import io.mockk.every
 import io.mockk.mockk
@@ -10,7 +10,7 @@ import org.junit.Test
 
 class OtherInfoPresenterTest {
 
-    private val artistInfoRepository: ArtistRepository = mockk(relaxUnitFun = true)
+    private val artistInfoRepository: CardRepository = mockk(relaxUnitFun = true)
     private val artistInfoResolver: ArtistInfoResolver = mockk(relaxUnitFun = true)
 
     private val otherInfoPresenter by lazy {

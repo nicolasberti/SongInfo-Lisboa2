@@ -1,7 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
 import ayds.lastfmservice.Artist
-import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
+import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
 import ayds.observer.Observable
 import ayds.observer.Subject
 
@@ -11,7 +11,7 @@ interface OtherInfoPresenter {
     fun actionSearch(artistName: String)
 }
 internal class OtherInfoPresenterImpl(
-    private var artistInfoRepository: ArtistRepository,
+    private var artistInfoRepository: CardRepository,
     private var artistInfoResolver: ArtistInfoResolver
 ): OtherInfoPresenter {
 

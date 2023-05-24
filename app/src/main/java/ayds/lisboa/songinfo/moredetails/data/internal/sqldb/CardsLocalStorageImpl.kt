@@ -7,11 +7,11 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import ayds.lastfmservice.Artist
 import ayds.lisboa.songinfo.moredetails.data.internal.ArtistLocalStorage
-internal class ArtistLocalStorageImpl(
+internal class CardsLocalStorageImpl(
     context: Context,
     private val cursorToArtistMapper: CursorToArtistMapper
 ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION),
-    ArtistLocalStorage {
+    CardsLocalStorage {
     private val projection = arrayOf(
         ID_COLUMN,
         ARTIST_COLUMN,

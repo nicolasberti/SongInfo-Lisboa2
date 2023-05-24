@@ -8,10 +8,14 @@ interface ProxyService{
 }
 
 internal class LastFMProxy(
-    private var artistService: ArtistService // Se le debe injectar el servicio externo
+    private var artistService: ArtistService
 ) : ProxyService {
     override fun getCard(artist: String): Card {
-        // Obtener del servicio externo y mapear a Card
+        var artist = artistService.getArtist(artist)
+        return if(artist != null)
+            Card.CardImpl(artist.info, artist.url, "LastFM", artist.urlImageLastFM)
+        else
+            Card.EmptyCard
     }
 
 }

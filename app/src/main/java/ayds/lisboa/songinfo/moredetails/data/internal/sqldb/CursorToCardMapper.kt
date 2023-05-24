@@ -1,16 +1,15 @@
 package ayds.lisboa.songinfo.moredetails.data.internal.sqldb
 
 import android.database.Cursor
-import ayds.lastfmservice.Artist
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 
 interface CursorToArtistMapper {
-
-    fun mapCursorToList(cursor: Cursor): List<Artist.LastFMArtist>
+    fun mapCursorToList(cursor: Cursor): List<Card.CardImpl>
 }
 
 internal class CursorToArtistMapperImpl : CursorToArtistMapper {
 
-    override fun mapCursorToList(cursor: Cursor): List<Artist.LastFMArtist> {
+    override fun mapCursorToList(cursor: Cursor): List<Card.CardImpl> {
         val itemsOfCursor: MutableList<Artist.LastFMArtist> = ArrayList()
         while (cursor.moveToNext()){
             val name = cursor.getString(cursor.getColumnIndexOrThrow(ARTIST_COLUMN))
