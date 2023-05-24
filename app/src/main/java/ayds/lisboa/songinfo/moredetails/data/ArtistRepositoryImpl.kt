@@ -16,6 +16,7 @@ class ArtistRepositoryImpl(
             artistInfo != null -> markArtistAsLocal(artistInfo)
             else -> {
                 try {
+                    // Aca debe buscar mediante el Broker
                     artistInfo = artistService.getArtist(artist)
                     if(artistInfo != null)
                         artistLocalStorage.saveArtist(artistInfo)
