@@ -10,8 +10,8 @@ class CardRepositoryImpl(
     private val broker: Broker
 ) : CardRepository {
 
-    override fun getArtist(artist: String): List<Card.CardImpl> {
-        var cards = cardsLocalStorage.getCards(artist)
+    override fun getArtist(artist: String): List<Card> {
+        val cards = cardsLocalStorage.getCards(artist)
         when {
             !(cards.isEmpty()) -> markArtistAsLocal(cards)
             else -> {
@@ -19,7 +19,7 @@ class CardRepositoryImpl(
                     val cardsBroker = broker.getCardInfo(artist)
                     for (card in cardsBroker) {
                         if(card != Card.EmptyCard)
-                            cardsLocalStorage.saveCard(card)
+                            cardsLocalStorage.saveCard(card as Card.CardImpl)
                     }
                 } catch (ioException: Exception) {
                     ioException.printStackTrace()
@@ -28,8 +28,6 @@ class CardRepositoryImpl(
         }
         return cards
     }
-
-
 
     private fun markArtistAsLocal(cards: List<Card.CardImpl>) {
         for(card in cards)

@@ -11,7 +11,7 @@ internal class LastFMProxy(
     private var artistService: ArtistService
 ) : ProxyService {
     override fun getCard(artist: String): Card {
-        var artist = artistService.getArtist(artist)
+        val artist = artistService.getArtist(artist)
         return if(artist != null)
             Card.CardImpl(artist.info, artist.url, "LastFM", artist.urlImageLastFM)
         else
@@ -19,21 +19,23 @@ internal class LastFMProxy(
     }
 
 }
-/*
+
 internal class WikipediaProxy(
-    private var wikipediaService: WikipediaService // Se le debe injectar el servicio externo
+    //private var wikipediaService: WikipediaService // Se le debe injectar el servicio externo
 ) : ProxyService {
     override fun getCard(artist: String): Card {
         // Obtener del servicio externo y mapear a Card
+        return Card.EmptyCard
     }
 
 }
 
-internal class NewYorkProxy(
-    private var nyService: NewYorkService // Se le debe injectar el servicio externo
+internal class NewYorkTimesProxy(
+    //private var nytimesService: NewYorkTimesService // Se le debe injectar el servicio externo
 ) : ProxyService {
     override fun getCard(artist: String): Card {
         // Obtener del servicio externo y mapear a Card
+        return Card.EmptyCard
     }
 
-}*/
+}

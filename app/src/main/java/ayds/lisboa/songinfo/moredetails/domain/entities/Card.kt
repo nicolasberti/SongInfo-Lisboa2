@@ -2,6 +2,7 @@ package ayds.lisboa.songinfo.moredetails.domain.entities
 
 sealed class Card {
     data class CardImpl(
+        val name: String,
         val description: String,
         val infoUrl: String,
         val source: String,

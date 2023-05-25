@@ -3,21 +3,21 @@ package ayds.lisboa.songinfo.moredetails.data.internal.sqldb
 import android.database.Cursor
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 
-interface CursorToArtistMapper {
+interface CursorToCardMapper {
     fun mapCursorToList(cursor: Cursor): List<Card.CardImpl>
 }
 
-internal class CursorToArtistMapperImpl : CursorToArtistMapper {
+internal class CursorToCardMapperImpl : CursorToCardMapper {
 
     override fun mapCursorToList(cursor: Cursor): List<Card.CardImpl> {
-        val itemsOfCursor: MutableList<Artist.LastFMArtist> = ArrayList()
+        val itemsOfCursor: MutableList<Card.CardImpl> = ArrayList()
         while (cursor.moveToNext()){
             val name = cursor.getString(cursor.getColumnIndexOrThrow(ARTIST_COLUMN))
-            val source = cursor.getInt(cursor.getColumnIndexOrThrow(SOURCE_COLUMN))
+            val source = cursor.getString(cursor.getColumnIndexOrThrow(SOURCE_COLUMN))
             val info = cursor.getString(cursor.getColumnIndexOrThrow(INFO_COLUMN))
             val url = cursor.getString(cursor.getColumnIndexOrThrow(URL_COLUMN))
-            val artist = Artist.LastFMArtist(name, info, url, source)
-            itemsOfCursor.add(artist)
+            val card = Card.CardImpl(name, info, url, source)
+            itemsOfCursor.add(card)
         }
         cursor.close()
         return itemsOfCursor
