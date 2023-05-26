@@ -59,7 +59,6 @@ class OtherInfoView: AppCompatActivity(
         textMoreDetails = findViewById(R.id.textMoreDetails)
         imageView = findViewById(R.id.imageView)
         urlButton = findViewById(R.id.openUrlButton)
-        setTextSourceView("Source: prueba") // borrar
     }
 
     private fun subscribeEvents() {
@@ -71,9 +70,10 @@ class OtherInfoView: AppCompatActivity(
 
     private fun updateView(uiState: OtherInfoUiState){
         runOnUiThread {
-            setImageView(uiState.lastFMImage)
-            setTextInfoView(uiState.info)
-            updateListenerUrl(uiState.url)
+            setImageView(uiState.lastFMCard.sourceLogoUrl)
+            setTextInfoView(uiState.lastFMCard.description)
+            updateListenerUrl(uiState.lastFMCard.infoUrl)
+            setTextSourceView(uiState.lastFMCard.source.name)
         }
     }
 

@@ -1,35 +1,27 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
-import ayds.lastfmservice.Artist
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import java.util.*
 
-interface ArtistInfoResolver {
-    fun getFormattedInfo(artistInfo: Artist, artistName: String): String
-    fun getUrl(artistInfo: Artist): String
+interface CardResolver {
+    fun setFormattedInfo(card: Card, artistName: String)
 }
 
-class ArtistInfoResolverImpl : ArtistInfoResolver {
+class CardResolverImpl : CardResolver {
 
     companion object {
         const val HTML_WIDTH = "<html><div width=400>"
         const val HTML_FONT = "<font face=\"arial\">"
         const val HTML_END = "</font></div></html>"
         const val NO_RESULTS = "No results"
-        const val NO_RESULTS_URL = "URL NOT FOUND"
         const val PREFIX_LOCALLY_STORED = "[*]"
     }
 
-    override fun getFormattedInfo(artistInfo: Artist, artistName: String): String{
-        val info = getInfoFromArtistInfo(artistInfo)
+    override fun setFormattedInfo(card: Card, artistName: String){
+        val info = getInfoFromCard(card)
         val infoFormatted = formatInfo(info, artistName)
-        return textToHtml(infoFormatted)
+        card.description = textToHtml(infoFormatted)
     }
-
-    override fun getUrl(artistInfo: Artist): String =
-        when (artistInfo) {
-            is Artist.EmptyArtist -> NO_RESULTS_URL
-            is Artist.LastFMArtist -> artistInfo.url
-        }
 
     private fun formatInfo(info: String, artist: String): String {
         val textoSinComillas = info.replace("'", " ")
@@ -48,18 +40,14 @@ class ArtistInfoResolverImpl : ArtistInfoResolver {
         return builder.toString()
     }
 
-    private fun getInfoFromArtistInfo(artistInfo: Artist): String{
-        return when (artistInfo){
-            is Artist.EmptyArtist -> NO_RESULTS
-            is Artist.LastFMArtist ->{
-                var info = artistInfo.info
-                if (artistInfo.isLocallyStored)
-                    info = PREFIX_LOCALLY_STORED + info
-                else if (info == "")
-                    info = NO_RESULTS
-                info
-            }
+    private fun getInfoFromCard(card: Card): String {
+        var info = card.description
+        return if (info == "")
+            NO_RESULTS
+        else{
+            if (card.isLocallyStored)
+                info = PREFIX_LOCALLY_STORED + info
+            info
         }
     }
-
 }

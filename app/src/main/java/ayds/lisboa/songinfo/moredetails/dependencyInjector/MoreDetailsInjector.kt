@@ -18,8 +18,8 @@ import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaInjector
 object MoreDetailsInjector {
 
     private lateinit var lastFMService: ArtistService
-    private lateinit var wikipediaService: WikipediaService
-    private lateinit var nyTimesService: NYTimesArtistInfoService
+    //private lateinit var wikipediaService: WikipediaService
+    //private lateinit var nyTimesService: NYTimesArtistInfoService
 
     private lateinit var cursorToCardMapper: CursorToCardMapper
     private lateinit var cardsLocalStorage: CardsLocalStorage
@@ -35,7 +35,7 @@ object MoreDetailsInjector {
 
     private lateinit var broker: Broker
 
-    private val artistInfoResolver = ArtistInfoResolverImpl()
+    private val cardResolver = CardResolverImpl()
 
     fun init(otherInfoWindow: OtherInfoView) {
         this.otherInfoWindow = otherInfoWindow
@@ -54,17 +54,17 @@ object MoreDetailsInjector {
 
     private fun initializeServices() {
         lastFMService = LastFMInjector.getService()
-        wikipediaService = WikipediaInjector.wikipediaService
-        nyTimesService = NYTimesArtistInfoServiceInjector.newYorkTimesArtistInfoServiceImpl
+        //wikipediaService = WikipediaInjector.wikipediaService
+        //nyTimesService = NYTimesArtistInfoServiceInjector.newYorkTimesArtistInfoServiceImpl
     }
 
     private fun initializeProxys() {
         lastFMProxy = LastFMProxy(lastFMService)
-        wikipediaProxy = WikipediaProxy(wikipediaService)
-        nyTimesProxy = NewYorkTimesProxy(nyTimesService)
+        //wikipediaProxy = WikipediaProxy(wikipediaService)
+        //nyTimesProxy = NewYorkTimesProxy(nyTimesService)
         proxyServices.add(lastFMProxy)
-        proxyServices.add(wikipediaProxy)
-        proxyServices.add(nyTimesProxy)
+        //proxyServices.add(wikipediaProxy)
+        //proxyServices.add(nyTimesProxy)
     }
 
     private fun initializeBroker(){
@@ -76,7 +76,7 @@ object MoreDetailsInjector {
     }
 
     private fun initializePresenter() {
-        otherInfoPresenter = OtherInfoPresenterImpl(cardRepository, artistInfoResolver)
+        otherInfoPresenter = OtherInfoPresenterImpl(cardRepository, cardResolver)
         otherInfoWindow.setPresenter(otherInfoPresenter)
     }
 }

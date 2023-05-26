@@ -2,6 +2,7 @@ package ayds.lisboa.songinfo.moredetails.domain.repository
 
 import ayds.lastfmservice.ArtistService
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
+import ayds.lisboa.songinfo.moredetails.domain.entities.Source
 import ayds.ny3.newyorktimes.external.NYTimesArtistInfoService
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService
 
@@ -15,9 +16,9 @@ internal class LastFMProxy(
     override fun getCard(artist: String): Card {
         val artistObject = artistService.getArtist(artist)
         return if(artistObject != null)
-            Card.CardImpl(artist, artistObject.info, artistObject.url, "LastFM", artistObject.urlImageLastFM)
+            Card(artistObject.info, artistObject.url, Source.LastFM, artistObject.urlImageLastFM)
         else
-            Card.EmptyCard
+            Card(source = Source.LastFM)
     }
 
 }
@@ -31,9 +32,9 @@ internal class WikipediaProxy(
     override fun getCard(artist: String): Card {
         val artistObject = wikipediaService.getArtist(artist)
         return if(artistObject != null)
-            Card.CardImpl(artist, artistObject.description, artistObject.wikipediaURL, "Wikipedia", WIKIPEDIA_LOGO_URL)
+            Card(artistObject.description, artistObject.wikipediaURL, Source.Wikipedia, WIKIPEDIA_LOGO_URL)
         else
-            Card.EmptyCard
+            Card(source = Source.Wikipedia)
     }
 
 }
@@ -47,9 +48,9 @@ internal class NewYorkTimesProxy(
     override fun getCard(artist: String): Card {
         val artistObject = nytimesService.getArtistInfo(artist)
         return if(artistObject != null)
-            Card.CardImpl(artist, artistObject.abstract, artistObject.url, "NewYork Times", NYTIMES_LOGO_URL)
+            Card(artistObject.abstract, artistObject.url, Source.NYTimes, NYTIMES_LOGO_URL)
         else
-            Card.EmptyCard
+            Card(source = Source.NYTimes)
     }
 
 }

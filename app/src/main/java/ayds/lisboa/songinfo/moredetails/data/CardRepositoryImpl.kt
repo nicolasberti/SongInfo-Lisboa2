@@ -18,8 +18,8 @@ class CardRepositoryImpl(
                 try {
                     val cardsBroker = broker.getCardInfo(artist)
                     for (card in cardsBroker) {
-                        if(card != Card.EmptyCard)
-                            cardsLocalStorage.saveCard(card as Card.CardImpl)
+                        if(card.description != "")
+                            cardsLocalStorage.saveCard(artist, card)
                     }
                 } catch (ioException: Exception) {
                     ioException.printStackTrace()
@@ -29,7 +29,7 @@ class CardRepositoryImpl(
         return cards
     }
 
-    private fun markArtistAsLocal(cards: List<Card.CardImpl>) {
+    private fun markArtistAsLocal(cards: List<Card>) {
         for(card in cards)
             card.isLocallyStored = true
     }

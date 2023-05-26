@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import ayds.lisboa.songinfo.moredetails.data.internal.CardsLocalStorage
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
+import ayds.lisboa.songinfo.moredetails.domain.entities.Source
 
 internal class CardsLocalStorageImpl(
     context: Context,
@@ -26,22 +27,22 @@ internal class CardsLocalStorageImpl(
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
-    override fun saveCard(card: Card.CardImpl) {
+    override fun saveCard(artist: String, card: Card) {
         val dataBase = this.writableDatabase
-        val values = createValuesOfArtist(card.name, card.description, card.infoUrl, card.source, card.sourceLogoUrl)
+        val values = createValuesOfArtist(artist, card.description, card.infoUrl, card.source, card.sourceLogoUrl)
         dataBase.insert(ARTIST_TABLE, null, values)
     }
 
-    private fun createValuesOfArtist(name:String, description: String, infoUrl: String, source: String, sourceLogoUrl: String): ContentValues {
+    private fun createValuesOfArtist(name:String, description: String, infoUrl: String, source: Source, sourceLogoUrl: String): ContentValues {
         val values = ContentValues()
         values.put(ARTIST_COLUMN, name)
         values.put(INFO_COLUMN, description)
         values.put(URL_COLUMN, infoUrl)
-        values.put(SOURCE_COLUMN, source)
+        values.put(SOURCE_COLUMN, source.name)
         values.put(SOURCE_LOGO_COLUMN, sourceLogoUrl)
         return values
     }
-    override fun getCards(artist: String): List<Card.CardImpl> {
+    override fun getCards(artist: String): List<Card> {
         val cursor = getCursor(artist)
         val itemsOfCursor = cursorToCardMapper.mapCursorToList(cursor)
         //return itemsOfCursor.getOrNull(0)

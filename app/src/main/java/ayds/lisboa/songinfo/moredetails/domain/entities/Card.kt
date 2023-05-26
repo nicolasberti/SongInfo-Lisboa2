@@ -1,14 +1,14 @@
 package ayds.lisboa.songinfo.moredetails.domain.entities
 
-sealed class Card {
-    data class CardImpl(
-        val name: String,
-        val description: String,
-        val infoUrl: String,
-        val source: String,
-        val sourceLogoUrl: String = "",
-        var isLocallyStored: Boolean = false
-    ) : Card()
-
-    object EmptyCard : Card()
+enum class Source {
+    LastFM,
+    Wikipedia,
+    NYTimes
 }
+data class Card(
+    var description: String = "",
+    val infoUrl: String = "",
+    val source: Source,
+    val sourceLogoUrl: String = "",
+    var isLocallyStored: Boolean = false
+)

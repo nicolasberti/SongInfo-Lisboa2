@@ -11,10 +11,10 @@ import org.junit.Test
 class OtherInfoPresenterTest {
 
     private val artistInfoRepository: CardRepository = mockk(relaxUnitFun = true)
-    private val artistInfoResolver: ArtistInfoResolver = mockk(relaxUnitFun = true)
+    private val cardResolver: CardResolver = mockk(relaxUnitFun = true)
 
     private val otherInfoPresenter by lazy {
-        OtherInfoPresenterImpl(artistInfoRepository, artistInfoResolver)
+        OtherInfoPresenterImpl(cardResolver)
     }
 
     @Test
@@ -25,8 +25,8 @@ class OtherInfoPresenterTest {
         val url = "https://google.com.ar"
 
         every { artistInfoRepository.getArtist(artistName) } returns artistInfo
-        every { artistInfoResolver.getFormattedInfo(artistInfo, artistName) } returns info
-        every { artistInfoResolver.getUrl(artistInfo) } returns url
+        every { cardResolver.getFormattedInfo(artistInfo, artistName) } returns info
+        every { cardResolver.getUrl(artistInfo) } returns url
 
         val otherInfoUiStateTester: (OtherInfoUiState) -> Unit = mockk(relaxed = true)
         otherInfoPresenter.uiEventObservable.subscribe{
