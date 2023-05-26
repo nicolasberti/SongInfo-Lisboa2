@@ -7,7 +7,7 @@ interface Broker {
 }
 
 internal class BrokerImpl(
-    private var proxyServices: List<ProxyService> // Se le deben injectar los 3 servicios
+    private var proxyServices: List<ProxyService>
 ) : Broker {
     override fun getCardInfo(artist: String): List<Card> {
         var cards = ArrayList<Card>()
