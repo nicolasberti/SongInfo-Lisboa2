@@ -1,19 +1,21 @@
 package ayds.lisboa.songinfo.moredetails.presentation
 
-import ayds.observer.Observer
+import CardAdapter
 import android.os.Bundle
 import android.text.Html
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import ayds.lisboa.songinfo.R
-import ayds.lisboa.songinfo.moredetails.dependencyInjector.MoreDetailsInjector
-import com.squareup.picasso.Picasso
-import java.util.*
 import ayds.lisboa.songinfo.moredetails.data.*
+import ayds.lisboa.songinfo.moredetails.dependencyInjector.MoreDetailsInjector
 import ayds.lisboa.songinfo.moredetails.domain.*
 import ayds.lisboa.songinfo.utils.UtilsInjector.navigationUtils
+import ayds.observer.Observer
+import com.squareup.picasso.Picasso
+import java.util.*
 
 class OtherInfoView: AppCompatActivity(
 ){
@@ -27,13 +29,28 @@ class OtherInfoView: AppCompatActivity(
     private lateinit var imageView: ImageView
     private lateinit var urlButton: Button
 
+    private lateinit var viewPager: ViewPager2
+    private lateinit var cardItems: MutableList<String>
+    private lateinit var cardAdapter: CardAdapter
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_other_info)
+        setContentView(R.layout.activity_more_details)
+        /*
         initModule()
         initProperties()
         subscribeEvents()
-        searchAction()
+        searchAction()*/
+        viewPager = findViewById(R.id.viewPager);
+
+        cardItems = mutableListOf()
+        cardItems.add("Texto de la tarjeta 1")
+        cardItems.add("Texto de la tarjeta 2")
+        cardItems.add("Texto de la tarjeta 3")
+
+        cardAdapter = CardAdapter(cardItems)
+        viewPager.adapter = cardAdapter
     }
 
     fun setPresenter(otherInfoPresenter: OtherInfoPresenter){
