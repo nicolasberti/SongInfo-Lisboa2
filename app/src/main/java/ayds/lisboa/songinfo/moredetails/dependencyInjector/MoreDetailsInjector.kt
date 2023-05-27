@@ -10,7 +10,10 @@ import ayds.lastfmservice.LastFMInjector
 import ayds.lastfmservice.ArtistService
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService
 import ayds.lisboa.songinfo.moredetails.domain.repository.*
-import ayds.lisboa.songinfo.moredetails.presentation.*
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.CardResolverImpl
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.OtherInfoPresenter
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.OtherInfoPresenterImpl
+import ayds.lisboa.songinfo.moredetails.presentation.view.OtherInfoView
 import ayds.ny3.newyorktimes.external.NYTimesArtistInfoService
 import ayds.ny3.newyorktimes.external.NYTimesArtistInfoServiceInjector
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaInjector
@@ -18,8 +21,8 @@ import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaInjector
 object MoreDetailsInjector {
 
     private lateinit var lastFMService: ArtistService
-    //private lateinit var wikipediaService: WikipediaService
-    //private lateinit var nyTimesService: NYTimesArtistInfoService
+    private lateinit var wikipediaService: WikipediaService
+    private lateinit var nyTimesService: NYTimesArtistInfoService
 
     private lateinit var cursorToCardMapper: CursorToCardMapper
     private lateinit var cardsLocalStorage: CardsLocalStorage
@@ -54,17 +57,17 @@ object MoreDetailsInjector {
 
     private fun initializeServices() {
         lastFMService = LastFMInjector.getService()
-        //wikipediaService = WikipediaInjector.wikipediaService
-        //nyTimesService = NYTimesArtistInfoServiceInjector.newYorkTimesArtistInfoServiceImpl
+        wikipediaService = WikipediaInjector.wikipediaService
+        nyTimesService = NYTimesArtistInfoServiceInjector.newYorkTimesArtistInfoServiceImpl
     }
 
     private fun initializeProxys() {
         lastFMProxy = LastFMProxy(lastFMService)
-        //wikipediaProxy = WikipediaProxy(wikipediaService)
-        //nyTimesProxy = NewYorkTimesProxy(nyTimesService)
+        wikipediaProxy = WikipediaProxy(wikipediaService)
+        nyTimesProxy = NewYorkTimesProxy(nyTimesService)
         proxyServices.add(lastFMProxy)
-        //proxyServices.add(wikipediaProxy)
-        //proxyServices.add(nyTimesProxy)
+        proxyServices.add(wikipediaProxy)
+        proxyServices.add(nyTimesProxy)
     }
 
     private fun initializeBroker(){

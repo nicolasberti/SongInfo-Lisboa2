@@ -2,8 +2,8 @@ package ayds.lisboa.songinfo.moredetails.presenter
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.LastFMArtist
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.EmptyArtist
-import ayds.lisboa.songinfo.moredetails.presentation.CardResolver
-import ayds.lisboa.songinfo.moredetails.presentation.CardResolverImpl
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.CardResolver
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.CardResolverImpl
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

@@ -1,4 +1,4 @@
-package ayds.lisboa.songinfo.moredetails.presentation
+package ayds.lisboa.songinfo.moredetails.presentation.presenter
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import java.util.*
