@@ -16,9 +16,9 @@ internal class LastFMProxy(
     override fun getCard(artist: String): Card {
         val artistObject = artistService.getArtist(artist)
         return if(artistObject != null)
-            Card(artist, artistObject.info, artistObject.url, Source.LastFM, artistObject.urlImageLastFM)
+            Card(artistObject.info, artistObject.url, Source.LastFM, artistObject.urlImageLastFM)
         else
-            Card(artist, "", "", source = Source.LastFM, "", false)
+            Card(source = Source.LastFM)
     }
 
 }
@@ -32,9 +32,9 @@ internal class WikipediaProxy(
     override fun getCard(artist: String): Card {
         val artistObject = wikipediaService.getArtist(artist)
         return if(artistObject != null)
-            Card(artist, artistObject.description, artistObject.wikipediaURL, Source.Wikipedia, WIKIPEDIA_LOGO_URL)
+            Card(artistObject.description, artistObject.wikipediaURL, Source.Wikipedia, WIKIPEDIA_LOGO_URL)
         else
-            Card(artist, "", "", source = Source.Wikipedia, "", false)
+            Card(source = Source.Wikipedia)
     }
 
 }
@@ -48,9 +48,9 @@ internal class NewYorkTimesProxy(
     override fun getCard(artist: String): Card {
         val artistObject = nytimesService.getArtistInfo(artist)
         return if(artistObject != null)
-            Card(artist, artistObject.abstract, artistObject.url, Source.NYTimes, NYTIMES_LOGO_URL)
+            Card(artistObject.abstract, artistObject.url, Source.NYTimes, NYTIMES_LOGO_URL)
         else
-            Card(artist, "", "", source = Source.NYTimes, "", false)
+            Card(source = Source.NYTimes)
     }
 
 }

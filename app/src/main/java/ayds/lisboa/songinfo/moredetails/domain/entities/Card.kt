@@ -6,7 +6,6 @@ enum class Source {
     NYTimes
 }
 data class Card(
-    var artist: String = "",
     var description: String = "",
     val infoUrl: String = "",
     val source: Source,

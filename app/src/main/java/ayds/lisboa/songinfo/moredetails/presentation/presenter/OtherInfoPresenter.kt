@@ -1,13 +1,10 @@
 package ayds.lisboa.songinfo.moredetails.presentation.presenter
 
-
-import android.util.Log
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ayds.observer.Observable
 import ayds.observer.Subject
 import ayds.lisboa.songinfo.moredetails.domain.entities.Source
 import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
-import kotlin.random.Random
 
 interface OtherInfoPresenter {
 
