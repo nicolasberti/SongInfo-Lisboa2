@@ -13,11 +13,12 @@ internal class CursorToCardMapperImpl : CursorToCardMapper {
     override fun mapCursorToList(cursor: Cursor): List<Card> {
         val itemsOfCursor: MutableList<Card> = ArrayList()
         while (cursor.moveToNext()){
+            val artist = cursor.getString(cursor.getColumnIndexOrThrow(ARTIST_COLUMN))
             val source = Source.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(SOURCE_COLUMN)))
             val info = cursor.getString(cursor.getColumnIndexOrThrow(INFO_COLUMN))
             val url = cursor.getString(cursor.getColumnIndexOrThrow(URL_COLUMN))
             val urlLogo = cursor.getString(cursor.getColumnIndexOrThrow(SOURCE_LOGO_COLUMN))
-            val card = Card(description = info, infoUrl = url, source = source, sourceLogoUrl = urlLogo)
+            val card = Card(artist, description = info, infoUrl = url, source = source, sourceLogoUrl = urlLogo)
             itemsOfCursor.add(card)
         }
         cursor.close()

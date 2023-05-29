@@ -1,5 +1,6 @@
 package ayds.lisboa.songinfo.moredetails.data
 
+import android.util.Log
 import ayds.lisboa.songinfo.moredetails.data.internal.CardsLocalStorage
 import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
@@ -13,14 +14,15 @@ class CardRepositoryImpl(
     override fun getArtist(artist: String): List<Card> {
         val cards = cardsLocalStorage.getCards(artist)
         when {
-            !(cards.isEmpty()) -> markArtistAsLocal(cards)
+            cards.isNotEmpty() -> markArtistAsLocal(cards)
             else -> {
                 try {
                     val cardsBroker = broker.getCardInfo(artist)
                     for (card in cardsBroker) {
                         if(card.description != "")
                             cardsLocalStorage.saveCard(artist, card)
-                    }
+                      }
+
                 } catch (ioException: Exception) {
                     ioException.printStackTrace()
                 }

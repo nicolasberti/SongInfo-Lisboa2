@@ -44,9 +44,7 @@ internal class CardsLocalStorageImpl(
     }
     override fun getCards(artist: String): List<Card> {
         val cursor = getCursor(artist)
-        val itemsOfCursor = cursorToCardMapper.mapCursorToList(cursor)
-        //return itemsOfCursor.getOrNull(0)
-        return itemsOfCursor
+        return cursorToCardMapper.mapCursorToList(cursor)
     }
 
     private fun getCursor(artist: String): Cursor {

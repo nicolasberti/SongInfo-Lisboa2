@@ -16,5 +16,5 @@ const val createTableArtists: String =
             "$ARTIST_COLUMN string, "+
             "$INFO_COLUMN string, "+
             "$URL_COLUMN string, "+
-            "$SOURCE_COLUMN string" +
+            "$SOURCE_COLUMN string," +
             "$SOURCE_LOGO_COLUMN string)"
