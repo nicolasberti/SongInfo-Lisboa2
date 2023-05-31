@@ -1,9 +1,9 @@
 package ayds.lisboa.songinfo.moredetails.data
 
+import Broker
 import ayds.lisboa.songinfo.moredetails.data.internal.CardsLocalStorage
 import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
-import ayds.lisboa.songinfo.moredetails.domain.repository.Broker
 
 class CardRepositoryImpl(
     private val cardsLocalStorage: CardsLocalStorage,
@@ -15,15 +15,10 @@ class CardRepositoryImpl(
         when {
             cards.isNotEmpty() -> markArtistAsLocal(cards)
             else -> {
-                try {
                     cards = broker.getCardInfo(artist)
                     for (card in cards) {
-                        if(card.description != "")
-                            cardsLocalStorage.saveCard(artist, card)
+                        cardsLocalStorage.saveCard(artist, card)
                     }
-                } catch (ioException: Exception) {
-                    ioException.printStackTrace()
-                }
             }
         }
         return cards

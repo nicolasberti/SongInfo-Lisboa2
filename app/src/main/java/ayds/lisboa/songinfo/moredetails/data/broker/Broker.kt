@@ -1,5 +1,3 @@
-package ayds.lisboa.songinfo.moredetails.domain.repository
-
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 
 interface Broker {
@@ -12,7 +10,9 @@ internal class BrokerImpl(
     override fun getCardInfo(artist: String): List<Card> {
         var cards = ArrayList<Card>()
         for (proxyService in proxyServices) {
-            cards.add(proxyService.getCard(artist))
+            val card = proxyService.getCard(artist)
+            if(card != null)
+                cards.add(card)
         }
         return cards
     }

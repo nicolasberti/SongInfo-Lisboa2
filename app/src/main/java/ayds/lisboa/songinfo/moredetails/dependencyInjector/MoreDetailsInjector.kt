@@ -1,5 +1,8 @@
 package ayds.lisboa.songinfo.moredetails.dependencyInjector
 
+import Broker
+import BrokerImpl
+import ProxyService
 import android.content.Context
 import ayds.lisboa.songinfo.moredetails.data.CardRepositoryImpl
 import ayds.lisboa.songinfo.moredetails.data.internal.CardsLocalStorage
@@ -8,6 +11,9 @@ import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToCardMapper
 import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToCardMapperImpl
 import ayds.lastfmservice.LastFMInjector
 import ayds.lastfmservice.ArtistService
+import ayds.lisboa.songinfo.moredetails.data.broker.proxys.LastFMProxy
+import ayds.lisboa.songinfo.moredetails.data.broker.proxys.NewYorkTimesProxy
+import ayds.lisboa.songinfo.moredetails.data.broker.proxys.WikipediaProxy
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService
 import ayds.lisboa.songinfo.moredetails.domain.repository.*
 import ayds.lisboa.songinfo.moredetails.presentation.presenter.CardResolverImpl
