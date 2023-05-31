@@ -16,5 +16,4 @@ internal class BrokerImpl(
         }
         return cards
     }
-
 }
