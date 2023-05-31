@@ -51,12 +51,15 @@ class CardAdapter(
     }
 
     private fun updateListenerUrl(button: Button, url: String) {
-        button.setOnClickListener { UtilsInjector.navigationUtils.openExternalUrl(otherInfoView, url) }
+        if (url.isNotEmpty())
+            button.setOnClickListener { UtilsInjector.navigationUtils.openExternalUrl(otherInfoView, url) }
     }
 
     private fun setImageView(imageView: ImageView, image: String){
-        val picasso =  Picasso.get()
-        val requestCreator = picasso.load(image)
-        requestCreator.into(imageView)
+        if (image.isNotEmpty()){
+            val picasso =  Picasso.get()
+            val requestCreator = picasso.load(image)
+            requestCreator.into(imageView)
+        }
     }
 }
