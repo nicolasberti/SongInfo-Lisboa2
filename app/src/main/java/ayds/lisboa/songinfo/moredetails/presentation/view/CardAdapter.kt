@@ -37,11 +37,9 @@ class CardAdapter(
         updateListenerUrl(holder.urlButton, card.infoUrl)
         setImageView(holder.imageView, card.sourceLogoUrl)
     }
-
     override fun getItemCount(): Int {
         return cardItems.size
     }
-
     private fun setTextView(textView: TextView, text: String){
         textView.text = text
     }

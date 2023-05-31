@@ -42,12 +42,10 @@ class CardResolverImpl : CardResolver {
 
     private fun getInfoFromCard(card: Card): String {
         var info = card.description
-        return if (info == "")
-            NO_RESULTS
-        else{
-            if (card.isLocallyStored)
-                info = PREFIX_LOCALLY_STORED + info
-            info
-        }
+        if (info.isEmpty())
+            return NO_RESULTS
+        if (card.isLocallyStored)
+            info = PREFIX_LOCALLY_STORED + info
+        return info
     }
 }
