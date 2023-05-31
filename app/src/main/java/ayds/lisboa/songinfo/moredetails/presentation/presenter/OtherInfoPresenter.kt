@@ -30,16 +30,16 @@ internal class OtherInfoPresenterImpl(
         notifyState(uiState)
     }
 
-    private fun cardToUiCard(card: Card, artistName: String): UiCard{
-        val info = cardResolver.getFormattedInfo(card, artistName)
-        return UiCard(info, card.infoUrl, card.source, card.sourceLogoUrl)
-    }
-
     private fun getUiState(cards: List<Card>, artistName: String): OtherInfoUiState {
         val cardsUiState:MutableList<UiCard> = mutableListOf()
         for (card in cards)
             cardsUiState.add(cardToUiCard(card,artistName))
         return OtherInfoUiState(cardsUiState)
+    }
+
+    private fun cardToUiCard(card: Card, artistName: String): UiCard {
+        val info = cardResolver.getFormattedInfo(card, artistName)
+        return UiCard(info, card.infoUrl, card.source, card.sourceLogoUrl)
     }
 
     private fun notifyState(uiState: OtherInfoUiState){

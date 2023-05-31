@@ -21,6 +21,7 @@ class CardAdapter(
     inner class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textMoreDetails: TextView = itemView.findViewById(R.id.textMoreDetails)
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
+        val textSource: TextView = itemView.findViewById(R.id.textSource)
         val urlButton: Button = itemView.findViewById(R.id.openUrlButton)
     }
 
@@ -31,12 +32,17 @@ class CardAdapter(
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         val card = cardItems[position]
+        setTextView(holder.textSource, card.source)
         setTextViewHtml(holder.textMoreDetails, card.description)
         updateListenerUrl(holder.urlButton, card.infoUrl)
         setImageView(holder.imageView, card.sourceLogoUrl)
     }
     override fun getItemCount(): Int {
         return cardItems.size
+    }
+
+    private fun setTextView(textView: TextView, text: String){
+        textView.text = text
     }
 
     @Suppress("DEPRECATION")
