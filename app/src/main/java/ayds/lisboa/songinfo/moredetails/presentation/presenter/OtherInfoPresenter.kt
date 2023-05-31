@@ -50,7 +50,7 @@ internal class OtherInfoPresenterImpl(
     }
 
     private fun getEmptyCard(): UiCard{
-        return UiCard(NO_RESULTS, "", NO_RESULTS, IMAGE_NO_RESULTS)
+        return UiCard(NO_RESULTS, "", "", IMAGE_NO_RESULTS)
     }
 
     private fun notifyState(uiState: OtherInfoUiState){

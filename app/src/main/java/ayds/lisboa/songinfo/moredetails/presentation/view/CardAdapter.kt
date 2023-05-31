@@ -23,6 +23,7 @@ class CardAdapter(
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
         val textSource: TextView = itemView.findViewById(R.id.textSource)
         val urlButton: Button = itemView.findViewById(R.id.openUrlButton)
+        val labelSource: TextView = itemView.findViewById(R.id.labelSource)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
@@ -32,17 +33,19 @@ class CardAdapter(
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         val card = cardItems[position]
-        setTextView(holder.textSource, card.source)
+        setTextSource(holder.labelSource, holder.textSource, card.source)
         setTextViewHtml(holder.textMoreDetails, card.description)
-        updateListenerUrl(holder.urlButton, card.infoUrl)
+        setListenerUrl(holder.urlButton, card.infoUrl)
         setImageView(holder.imageView, card.sourceLogoUrl)
     }
     override fun getItemCount(): Int {
         return cardItems.size
     }
 
-    private fun setTextView(textView: TextView, text: String){
-        textView.text = text
+    private fun setTextSource(labelSource: TextView, textSource: TextView, source: String){
+        if (source.isEmpty())
+            labelSource.text = ""
+        textSource.text = source
     }
 
     @Suppress("DEPRECATION")
@@ -50,7 +53,7 @@ class CardAdapter(
         textView.text = Html.fromHtml(text)
     }
 
-    private fun updateListenerUrl(button: Button, url: String) {
+    private fun setListenerUrl(button: Button, url: String) {
         if (url.isNotEmpty())
             button.setOnClickListener { UtilsInjector.navigationUtils.openExternalUrl(otherInfoView, url) }
     }
