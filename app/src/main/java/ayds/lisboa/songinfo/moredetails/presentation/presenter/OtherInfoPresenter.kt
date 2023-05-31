@@ -1,10 +1,9 @@
 package ayds.lisboa.songinfo.moredetails.presentation.presenter
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
+import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.lisboa.songinfo.moredetails.domain.entities.Source
-import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
 
 interface OtherInfoPresenter {
 
@@ -31,29 +30,16 @@ internal class OtherInfoPresenterImpl(
         notifyState(uiState)
     }
 
-    private fun getNYTimesCard(cards: List<Card>): Card {
-        val nYTimesCard = cards.find { it.source == Source.NYTimes }
-        return nYTimesCard ?: Card(source = Source.NYTimes)
-    }
-
-    private fun getLastFMCard(cards: List<Card>): Card {
-        val lastFMCard = cards.find { it.source == Source.LastFM }
-        return lastFMCard ?: Card(source = Source.LastFM)
-    }
-
-    private fun getWikipediaCard(cards: List<Card>): Card {
-        val wikipediaCard = cards.find { it.source == Source.Wikipedia }
-        return wikipediaCard ?: Card(source = Source.Wikipedia)
+    private fun cardToUiCard(card: Card, artistName: String): UiCard{
+        val info = cardResolver.getFormattedInfo(card, artistName)
+        return UiCard(info, card.infoUrl, card.source, card.sourceLogoUrl)
     }
 
     private fun getUiState(cards: List<Card>, artistName: String): OtherInfoUiState {
-        val lastFMCard = getLastFMCard(cards)
-        cardResolver.setFormattedInfo(lastFMCard, artistName)
-        val wikipediaCard = getWikipediaCard(cards)
-        cardResolver.setFormattedInfo(wikipediaCard, artistName)
-        val nYTimesCard = getNYTimesCard(cards)
-        cardResolver.setFormattedInfo(nYTimesCard, artistName)
-        return OtherInfoUiState(lastFMCard, wikipediaCard, nYTimesCard)
+        val cardsUiState:MutableList<UiCard> = mutableListOf()
+        for (card in cards)
+            cardsUiState.add(cardToUiCard(card,artistName))
+        return OtherInfoUiState(cardsUiState)
     }
 
     private fun notifyState(uiState: OtherInfoUiState){

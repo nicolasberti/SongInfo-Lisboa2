@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import ayds.lisboa.songinfo.R
 import ayds.lisboa.songinfo.moredetails.dependencyInjector.MoreDetailsInjector
-import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ayds.lisboa.songinfo.moredetails.presentation.presenter.OtherInfoPresenter
 import ayds.lisboa.songinfo.moredetails.presentation.presenter.OtherInfoUiState
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.UiCard
 import ayds.observer.Observer
 
 class OtherInfoView: AppCompatActivity(
@@ -60,20 +60,11 @@ class OtherInfoView: AppCompatActivity(
 
     private fun updateView(uiState: OtherInfoUiState){
         runOnUiThread {
-            val cards = getCardsFromUiState(uiState)
-            createAdapter(cards)
+            createAdapter(uiState.cards)
         }
     }
 
-    private fun getCardsFromUiState(uiState: OtherInfoUiState): List<Card>{
-        val cards: MutableList<Card> = mutableListOf()
-        cards.add(uiState.lastFMCard)
-        cards.add(uiState.nYTimesCard)
-        cards.add(uiState.wikipediaCard)
-        return cards
-    }
-
-    private fun createAdapter(cards: List<Card>){
+    private fun createAdapter(cards: List<UiCard>){
         cardAdapter = CardAdapter(this, cards)
         viewPager.adapter = cardAdapter
     }

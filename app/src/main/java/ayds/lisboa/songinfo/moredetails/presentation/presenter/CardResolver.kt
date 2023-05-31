@@ -4,7 +4,7 @@ import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import java.util.*
 
 interface CardResolver {
-    fun setFormattedInfo(card: Card, artistName: String)
+    fun getFormattedInfo(card: Card, artistName: String): String
 }
 
 class CardResolverImpl : CardResolver {
@@ -17,10 +17,10 @@ class CardResolverImpl : CardResolver {
         const val PREFIX_LOCALLY_STORED = "[*]"
     }
 
-    override fun setFormattedInfo(card: Card, artistName: String){
+    override fun getFormattedInfo(card: Card, artistName: String): String{
         val info = getInfoFromCard(card)
         val infoFormatted = formatInfo(info, artistName)
-        card.description = textToHtml(infoFormatted)
+        return textToHtml(infoFormatted)
     }
 
     private fun formatInfo(info: String, artist: String): String {
