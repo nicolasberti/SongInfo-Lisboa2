@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import ayds.lisboa.songinfo.moredetails.data.internal.CardsLocalStorage
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
-import ayds.lisboa.songinfo.moredetails.domain.entities.Source
 
 internal class CardsLocalStorageImpl(
     context: Context,
@@ -33,12 +32,12 @@ internal class CardsLocalStorageImpl(
         dataBase.insert(ARTIST_TABLE, null, values)
     }
 
-    private fun createValuesOfArtist(name:String, description: String, infoUrl: String, source: Source, sourceLogoUrl: String): ContentValues {
+    private fun createValuesOfArtist(name:String, description: String, infoUrl: String, source: String, sourceLogoUrl: String): ContentValues {
         val values = ContentValues()
         values.put(ARTIST_COLUMN, name)
         values.put(INFO_COLUMN, description)
         values.put(URL_COLUMN, infoUrl)
-        values.put(SOURCE_COLUMN, source.name)
+        values.put(SOURCE_COLUMN, source)
         values.put(SOURCE_LOGO_COLUMN, sourceLogoUrl)
         return values
     }
