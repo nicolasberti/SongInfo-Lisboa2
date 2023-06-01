@@ -16,8 +16,7 @@ import ayds.lisboa.songinfo.moredetails.data.broker.proxys.NewYorkTimesProxy
 import ayds.lisboa.songinfo.moredetails.data.broker.proxys.WikipediaProxy
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService
 import ayds.lisboa.songinfo.moredetails.domain.repository.*
-import ayds.lisboa.songinfo.moredetails.presentation.presenter.CardResolverImpl
-import ayds.lisboa.songinfo.moredetails.presentation.presenter.OtherInfoPresenter
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.*
 import ayds.lisboa.songinfo.moredetails.presentation.presenter.OtherInfoPresenterImpl
 import ayds.lisboa.songinfo.moredetails.presentation.view.OtherInfoView
 import ayds.ny3.newyorktimes.external.NYTimesArtistInfoService
@@ -44,16 +43,22 @@ object MoreDetailsInjector {
 
     private lateinit var broker: Broker
 
-    private val cardResolver = CardResolverImpl()
+    private val labelFactory: LabelFactory = LabelFactoryImpl
+    private lateinit var cardResolver: CardResolver
 
     fun init(otherInfoWindow: OtherInfoView) {
         this.otherInfoWindow = otherInfoWindow
+        initializeCardResolver()
         initializeCardsLocalStorage()
         initializeServices()
         initializeProxys()
         initializeBroker()
         initializeCardRepository()
         initializePresenter()
+    }
+
+    private fun initializeCardResolver() {
+        cardResolver = CardResolverImpl(labelFactory)
     }
 
     private fun initializeCardsLocalStorage() {

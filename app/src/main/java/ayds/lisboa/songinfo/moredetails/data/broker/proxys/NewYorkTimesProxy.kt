@@ -2,6 +2,7 @@ package ayds.lisboa.songinfo.moredetails.data.broker.proxys
 
 import ProxyService
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
+import ayds.lisboa.songinfo.moredetails.domain.entities.Source
 import ayds.ny3.newyorktimes.external.NYTimesArtistInfoService
 
 internal class NewYorkTimesProxy(
@@ -12,7 +13,7 @@ internal class NewYorkTimesProxy(
         return try {
             val artistObject = nytimesService.getArtistInfo(artist)
             if(artistObject != null)
-                Card(artistObject.abstract, artistObject.url, "New York Times", artistObject.nytLogoUrl)
+                Card(artistObject.abstract, artistObject.url, Source.NYTimes, artistObject.nytLogoUrl)
             else
                 null
         } catch (ioException: Exception) {

@@ -46,7 +46,8 @@ internal class OtherInfoPresenterImpl(
 
     private fun cardToUiCard(card: Card, artistName: String): UiCard {
         val info = cardResolver.getFormattedInfo(card, artistName)
-        return UiCard(info, card.infoUrl, card.source, card.sourceLogoUrl)
+        val source = cardResolver.getSource(card.source)
+        return UiCard(info, card.infoUrl, source, card.sourceLogoUrl)
     }
 
     private fun getEmptyCard(): UiCard{

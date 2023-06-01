@@ -1,13 +1,17 @@
 package ayds.lisboa.songinfo.moredetails.presentation.presenter
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
+import ayds.lisboa.songinfo.moredetails.domain.entities.Source
 import java.util.*
 
 interface CardResolver {
     fun getFormattedInfo(card: Card, artistName: String): String
+    fun getSource(source: Source): String
 }
 
-class CardResolverImpl : CardResolver {
+class CardResolverImpl(
+    private var labelFactory: LabelFactory
+) : CardResolver {
 
     companion object {
         const val HTML_WIDTH = "<html><div width=400>"
@@ -21,6 +25,10 @@ class CardResolverImpl : CardResolver {
         val info = getInfoFromCard(card)
         val infoFormatted = formatInfo(info, artistName)
         return textToHtml(infoFormatted)
+    }
+
+    override fun getSource(source: Source): String {
+        return labelFactory.getLabelFromSource(source)
     }
 
     private fun formatInfo(info: String, artist: String): String {

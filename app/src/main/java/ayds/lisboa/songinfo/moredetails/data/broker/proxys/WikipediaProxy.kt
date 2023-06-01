@@ -2,6 +2,7 @@ package ayds.lisboa.songinfo.moredetails.data.broker.proxys
 
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ProxyService
+import ayds.lisboa.songinfo.moredetails.domain.entities.Source
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WIKIPEDIA_LOGO_URL
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService
 
@@ -13,7 +14,7 @@ internal class WikipediaProxy(
         return try {
             val artistObject = wikipediaService.getArtist(artist)
             if(artistObject != null)
-                Card(artistObject.description, artistObject.wikipediaURL, "Wikipedia", WIKIPEDIA_LOGO_URL)
+                Card(artistObject.description, artistObject.wikipediaURL, Source.Wikipedia, WIKIPEDIA_LOGO_URL)
             else
                 null
         } catch (ioException: Exception) {
