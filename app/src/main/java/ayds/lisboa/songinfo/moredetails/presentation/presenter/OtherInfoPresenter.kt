@@ -30,7 +30,7 @@ internal class OtherInfoPresenterImpl(
     }
 
     private fun threadActionSearch(artistName: String){
-        val cards = cardRepository.getArtist(artistName)
+        val cards = cardRepository.getCards(artistName)
         val uiState = getUiState(cards, artistName)
         notifyState(uiState)
     }

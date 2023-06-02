@@ -1,12 +1,12 @@
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 
-interface Broker {
+interface CardsBroker {
     fun getCardInfo(artist: String): List<Card>
 }
 
-internal class BrokerImpl(
+internal class CardsBrokerImpl(
     private var proxyServices: List<ProxyService>
-) : Broker {
+) : CardsBroker {
     override fun getCardInfo(artist: String): List<Card> {
         var cards = ArrayList<Card>()
         for (proxyService in proxyServices) {

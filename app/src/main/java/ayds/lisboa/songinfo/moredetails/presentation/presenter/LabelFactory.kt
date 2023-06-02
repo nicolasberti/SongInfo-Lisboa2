@@ -7,8 +7,8 @@ interface LabelFactory{
 }
 
 internal object LabelFactoryImpl: LabelFactory{
-    private const val LAST_FM_LABEL = "LastFM"
-    private const val NEW_YORK_TIMES_LABEL = "NewYorkTimes"
+    private const val LAST_FM_LABEL = "Last FM"
+    private const val NEW_YORK_TIMES_LABEL = "New York Times"
     private const val WIKIPEDIA_LABEL = "Wikipedia"
 
     override fun getLabelFromSource(source: Source): String {

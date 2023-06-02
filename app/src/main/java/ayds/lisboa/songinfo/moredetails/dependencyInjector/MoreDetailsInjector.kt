@@ -1,7 +1,7 @@
 package ayds.lisboa.songinfo.moredetails.dependencyInjector
 
-import Broker
-import BrokerImpl
+import CardsBroker
+import CardsBrokerImpl
 import ProxyService
 import android.content.Context
 import ayds.lisboa.songinfo.moredetails.data.CardRepositoryImpl
@@ -14,6 +14,7 @@ import ayds.lastfmservice.ArtistService
 import ayds.lisboa.songinfo.moredetails.data.broker.proxys.LastFMProxy
 import ayds.lisboa.songinfo.moredetails.data.broker.proxys.NewYorkTimesProxy
 import ayds.lisboa.songinfo.moredetails.data.broker.proxys.WikipediaProxy
+import ayds.lisboa.songinfo.moredetails.data.broker.proxys.mappers.*
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService
 import ayds.lisboa.songinfo.moredetails.domain.repository.*
 import ayds.lisboa.songinfo.moredetails.presentation.presenter.*
@@ -41,22 +42,32 @@ object MoreDetailsInjector {
     private lateinit var otherInfoPresenter: OtherInfoPresenter
     private lateinit var otherInfoWindow: OtherInfoView
 
-    private lateinit var broker: Broker
+    private lateinit var broker: CardsBroker
 
     private val labelFactory: LabelFactory = LabelFactoryImpl
     private lateinit var cardResolver: CardResolver
+
+    private lateinit var artistLastFMToCardMapper: ArtistLastFMToCardMapper
+    private lateinit var artistNYTimesToCardMapper: ArtistNYTimesToCardMapper
+    private lateinit var artistWikipediaToCardMapper: ArtistWikipediaToCardMapper
 
     fun init(otherInfoWindow: OtherInfoView) {
         this.otherInfoWindow = otherInfoWindow
         initializeCardResolver()
         initializeCardsLocalStorage()
         initializeServices()
+        initializeMappers()
         initializeProxys()
         initializeBroker()
         initializeCardRepository()
         initializePresenter()
     }
 
+    private fun initializeMappers() {
+        artistLastFMToCardMapper = ArtistLastFMToCardMapperImpl()
+        artistNYTimesToCardMapper = ArtistNYTimesToCardMapperImpl()
+        artistWikipediaToCardMapper = ArtistWikipediaToCardMapperImpl()
+    }
     private fun initializeCardResolver() {
         cardResolver = CardResolverImpl(labelFactory)
     }
@@ -73,16 +84,16 @@ object MoreDetailsInjector {
     }
 
     private fun initializeProxys() {
-        lastFMProxy = LastFMProxy(lastFMService)
-        wikipediaProxy = WikipediaProxy(wikipediaService)
-        nyTimesProxy = NewYorkTimesProxy(nyTimesService)
+        lastFMProxy = LastFMProxy(lastFMService, artistLastFMToCardMapper)
+        wikipediaProxy = WikipediaProxy(wikipediaService, artistWikipediaToCardMapper)
+        nyTimesProxy = NewYorkTimesProxy(nyTimesService, artistNYTimesToCardMapper)
         proxyServices.add(lastFMProxy)
         proxyServices.add(wikipediaProxy)
         proxyServices.add(nyTimesProxy)
     }
 
     private fun initializeBroker(){
-        broker = BrokerImpl(proxyServices)
+        broker = CardsBrokerImpl(proxyServices)
     }
 
     private fun initializeCardRepository() {

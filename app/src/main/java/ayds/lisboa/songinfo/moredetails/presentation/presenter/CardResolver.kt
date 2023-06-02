@@ -9,7 +9,7 @@ interface CardResolver {
     fun getSource(source: Source): String
 }
 
-class CardResolverImpl(
+internal class CardResolverImpl(
     private var labelFactory: LabelFactory
 ) : CardResolver {
 
