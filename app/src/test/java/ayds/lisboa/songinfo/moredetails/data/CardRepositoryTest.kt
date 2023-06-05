@@ -19,7 +19,7 @@ class CardRepositoryTest {
     }
 
     @Test
-    fun `dado un artista que no existe el almacenamiento local lo busca en el broker y lo encuentra`() {
+    fun `dado un artista que no existe en el almacenamiento local, se busca utilizando el broker y se encuentra`() {
         every { cardsLocalStorage.getCards("name") } returns emptyList<Card>()
         val source: Source = mockk(relaxUnitFun = true)
         val card = Card("description", "info", source, "sourceLogoUrl", false)
@@ -45,7 +45,7 @@ class CardRepositoryTest {
     }
 
     @Test
-    fun `dado un artista que no existe el almacenamiento local lo busca en el broker y no lo encuentra`() {
+    fun `dado un artista que no existe, el repositorio lo busca utilizando el broker y no lo encuentra`() {
         every { cardsLocalStorage.getCards("name") } returns emptyList<Card>()
 
         every { cardsBroker.getCardInfo("name") } returns emptyList<Card>()

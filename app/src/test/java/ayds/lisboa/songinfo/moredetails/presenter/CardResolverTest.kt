@@ -1,96 +1,88 @@
 package ayds.lisboa.songinfo.moredetails.presenter
-/*
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.LastFMArtist
-import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.EmptyArtist
+
+import ayds.lisboa.songinfo.moredetails.domain.entities.Card
+import ayds.lisboa.songinfo.moredetails.domain.entities.Source
 import ayds.lisboa.songinfo.moredetails.presentation.presenter.CardResolver
 import ayds.lisboa.songinfo.moredetails.presentation.presenter.CardResolverImpl
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.LabelFactory
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-*/
+
 class CardResolverTest {
-/*
+
+    private val labelFactory: LabelFactory = mockk(relaxUnitFun = true)
     private lateinit var cardResolver: CardResolver
 
     @Before
     fun setUp() {
-        cardResolver = CardResolverImpl()
+        cardResolver = CardResolverImpl(labelFactory)
     }
     @Test
-    fun `getFormattedInfo with LastFM artist and locally stored info returns formatted HTML`() {
+    fun `getFormattedInfo with card and locally stored info returns formatted HTML`() {
 
-        val artistInfo = LastFMArtist("Test artist", "Test bio","Test url",1,true)
+        val card = Card("Test description", "Test url",Source.LastFM,"Test logo url",true)
         val artistName = "Test artist"
 
-        val result = cardResolver.getFormattedInfo(artistInfo, artistName)
+        val result = cardResolver.getFormattedInfo(card, artistName)
 
 
-        val expected =  "<html><div width=400><font face=\"arial\">[*]Test bio</font></div></html>"
+        val expected =  "<html><div width=400><font face=\"arial\">[*]Test description</font></div></html>"
         assertEquals(expected, result)
     }
 
     @Test
-    fun `getFormattedInfo with LastFM artist, not locally stored info returns formatted HTML`() {
-        val artistInfo = LastFMArtist("Test artist", "Test bio","Test url",1,false)
+    fun `getFormattedInfo with card and not locally stored info returns formatted HTML`() {
+        val card = Card("Test description", "Test url",Source.LastFM,"Test logo url",false)
         val artistName = "Test artist"
 
-        val result = cardResolver.getFormattedInfo(artistInfo, artistName)
+        val result = cardResolver.getFormattedInfo(card, artistName)
 
-        val expected =  "<html><div width=400><font face=\"arial\">Test bio</font></div></html>"
+        val expected =  "<html><div width=400><font face=\"arial\">Test description</font></div></html>"
         assertEquals(expected, result)
     }
 
     @Test
-    fun `getFormattedInfo with empty artist returns no results`() {
-        val artistInfo = EmptyArtist
-        val artistName = "Test empty artist"
-
-        val result = cardResolver.getFormattedInfo(artistInfo, artistName)
-
-        val expected = "<html><div width=400><font face=\"arial\">No results</font></div></html>"
-        assertEquals(expected, result)
-    }
-
-    @Test
-    fun `getFormattedInfo with LastFM artist, not locally stored info, and empty info returns formatted HTML`() {
-        val artistInfo = LastFMArtist("Test artist", "","Test url",1,false)
+    fun `getFormattedInfo with card, not locally stored info, and empty description returns formatted HTML`() {
+        val card = Card("", "Test url",Source.LastFM,"Test logo url",false)
         val artistName = "Test artist"
 
-        val result = cardResolver.getFormattedInfo(artistInfo, artistName)
+        val result = cardResolver.getFormattedInfo(card, artistName)
 
         val expected =  "<html><div width=400><font face=\"arial\">No results</font></div></html>"
         assertEquals(expected, result)
     }
 
     @Test
-    fun `getFormattedInfo with LastFM artist, info isLocallyStored and info is empty, returns formatted info in html`() {
-        val artistInfo = LastFMArtist("Test artist", "","Test url",1,true)
+    fun `getFormattedInfo with card, isLocallyStored and info is empty, returns formatted info in html`() {
+        val card = Card("", "Test url",Source.LastFM,"Test logo url",true)
         val artistName = "Test artist"
 
-        val result = cardResolver.getFormattedInfo(artistInfo, artistName)
+        val result = cardResolver.getFormattedInfo(card, artistName)
 
-        val expected =  "<html><div width=400><font face=\"arial\">[*]</font></div></html>"
+        val expected =  "<html><div width=400><font face=\"arial\">No results</font></div></html>"
         assertEquals(expected, result)
     }
 
     @Test
-    fun `given artist info and artist is EmptyArtist, when getUrl is called, then returns no results`() {
-        val artistInfo = EmptyArtist
+    fun `getSource with card source, returns string with corresponding label`() {
+        val lastFMCard = Card("Test description", "Test url",Source.LastFM,"Test logo url",true)
+        val nyTimesCard = Card("Test description", "Test url",Source.NYTimes,"Test logo url",true)
+        val wikipediaCard = Card("Test description", "Test url",Source.Wikipedia,"Test logo url",true)
 
-        val result = cardResolver.getUrl(artistInfo)
+        every { cardResolver.getSource(Source.LastFM) } returns "Last FM"
+        every { cardResolver.getSource(Source.NYTimes) } returns "New York Times"
+        every { cardResolver.getSource(Source.Wikipedia) } returns "Wikipedia"
 
-        val expected = "URL NOT FOUND"
-        assertEquals(expected, result)
+        val lastFMResult = cardResolver.getSource(lastFMCard.source)
+        val nyTimesResult = cardResolver.getSource(nyTimesCard.source)
+        val wikipediaResult = cardResolver.getSource(wikipediaCard.source)
+
+        assertEquals("Last FM", lastFMResult)
+        assertEquals("New York Times", nyTimesResult)
+        assertEquals("Wikipedia", wikipediaResult)
     }
-
-    @Test
-    fun `given artist info and artist is LastFMArtist, when getUrl is called, then returns url`() {
-        val artistInfo = LastFMArtist("Test artist", "Test info","https://www.google.com.ar",1,true)
-
-        val result = cardResolver.getUrl(artistInfo)
-
-        val expected = "https://www.google.com.ar"
-        assertEquals(expected, result)
-    }*/
 }
