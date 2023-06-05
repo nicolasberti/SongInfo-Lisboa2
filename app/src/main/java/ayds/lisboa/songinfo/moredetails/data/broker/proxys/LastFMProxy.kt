@@ -2,7 +2,6 @@ package ayds.lisboa.songinfo.moredetails.data.broker.proxys
 
 import ayds.lastfmservice.ArtistService
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
-import ProxyService
 import ayds.lisboa.songinfo.moredetails.data.broker.proxys.mappers.ArtistLastFMToCardMapper
 
 internal class LastFMProxy(

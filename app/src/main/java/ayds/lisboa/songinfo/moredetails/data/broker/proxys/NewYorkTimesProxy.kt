@@ -1,6 +1,5 @@
 package ayds.lisboa.songinfo.moredetails.data.broker.proxys
 
-import ProxyService
 import ayds.lisboa.songinfo.moredetails.data.broker.proxys.mappers.ArtistNYTimesToCardMapper
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ayds.ny3.newyorktimes.external.NYTimesArtistInfoService
