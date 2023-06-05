@@ -21,7 +21,7 @@ import ayds.lisboa.songinfo.moredetails.presentation.presenter.*
 import ayds.lisboa.songinfo.moredetails.presentation.presenter.OtherInfoPresenterImpl
 import ayds.lisboa.songinfo.moredetails.presentation.view.OtherInfoView
 import ayds.ny3.newyorktimes.external.NYTimesArtistInfoService
-import ayds.ny3.newyorktimes.external.NYTimesArtistInfoServiceInjector
+import ayds.ny3.newyorktimes.external.injector.NYTimesArtistInfoServiceInjector
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaInjector
 
 object MoreDetailsInjector {

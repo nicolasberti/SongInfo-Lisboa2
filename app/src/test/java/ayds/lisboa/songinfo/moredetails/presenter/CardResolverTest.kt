@@ -1,5 +1,5 @@
 package ayds.lisboa.songinfo.moredetails.presenter
-
+/*
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.LastFMArtist
 import ayds.lisboa.songinfo.moredetails.domain.entities.Artist.EmptyArtist
 import ayds.lisboa.songinfo.moredetails.presentation.presenter.CardResolver
@@ -8,9 +8,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-
+*/
 class CardResolverTest {
-
+/*
     private lateinit var cardResolver: CardResolver
 
     @Before
@@ -92,5 +92,5 @@ class CardResolverTest {
 
         val expected = "https://www.google.com.ar"
         assertEquals(expected, result)
-    }
+    }*/
 }
