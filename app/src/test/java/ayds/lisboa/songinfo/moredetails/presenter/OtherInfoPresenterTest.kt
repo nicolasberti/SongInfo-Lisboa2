@@ -3,12 +3,10 @@ package ayds.lisboa.songinfo.moredetails.presenter
 import ayds.lisboa.songinfo.moredetails.domain.entities.Card
 import ayds.lisboa.songinfo.moredetails.domain.entities.Source
 import ayds.lisboa.songinfo.moredetails.domain.repository.CardRepository
-import ayds.lisboa.songinfo.moredetails.presentation.*
 import ayds.lisboa.songinfo.moredetails.presentation.presenter.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Before
 import org.junit.Test
 
 class OtherInfoPresenterTest {
@@ -25,25 +23,21 @@ class OtherInfoPresenterTest {
     @Test
     fun `should notify uistate on action search event`(){
         val artistName = "artist"
-        val card = mockk<Card>()
-        val cards = mutableListOf<Card>()
-        cards.add(card)
-        val info = "formatted info"
+        val cards = listOf(
+            Card("info1", "infoUrl1", Source.LastFM, "sourceLogoUrl1", false),
+            Card("info2", "infoUrl2", Source.NYTimes, "sourceLogoUrl2", false),
+            Card("info3", "infoUrl3", Source.Wikipedia, "sourceLogoUrl3", false)
+        )
+        val uiCards = listOf(
+            UiCard("info1", "infoUrl1" , "Last FM", "sourceLogoUrl1"),
+            UiCard("info2", "infoUrl2" , "New York Times", "sourceLogoUrl2"),
+            UiCard("info3", "infoUrl3" , "Wikipedia", "sourceLogoUrl3")
+        )
 
         every { cardRepository.getCards(artistName) } returns cards
-        every { cardResolver.getFormattedInfo(card, artistName) } returns info
         every { cardResolver.getSource(Source.LastFM) } returns "Last FM"
         every { cardResolver.getSource(Source.NYTimes) } returns "New York Times"
         every { cardResolver.getSource(Source.Wikipedia) } returns "Wikipedia"
-        every { labelFactory.getLabelFromSource(Source.LastFM) } returns "Last FM"
-        every { labelFactory.getLabelFromSource(Source.NYTimes) } returns "New York Times"
-        every { labelFactory.getLabelFromSource(Source.Wikipedia) } returns "Wikipedia"
-
-        val uiCards = listOf(
-            UiCard(info, "infoUrl", "Last FM", "sourceLogo"),
-            UiCard(info, "infoUrl", "New York Times", "sourceLogo"),
-            UiCard(info, "infoUrl", "Wikipedia", "sourceLogo")
-        )
 
         val otherInfoUiStateTester: (OtherInfoUiState) -> Unit = mockk(relaxed = true)
         otherInfoPresenter.uiEventObservable.subscribe{
