@@ -1,69 +1,107 @@
 package ayds.lisboa.songinfo.moredetails.dependencyInjector
 
 import android.content.Context
-import ayds.lisboa.songinfo.moredetails.data.ArtistRepositoryImpl
-import ayds.lisboa.songinfo.moredetails.data.external.*
-import ayds.lisboa.songinfo.moredetails.data.external.JsonToArtistResolver
-import ayds.lisboa.songinfo.moredetails.data.internal.ArtistLocalStorage
-import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.ArtistLocalStorageImpl
-import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToArtistMapper
-import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToArtistMapperImpl
-import ayds.lisboa.songinfo.moredetails.domain.repository.ArtistRepository
-import ayds.lisboa.songinfo.moredetails.presentation.*
-import ayds.lisboa.songinfo.moredetails.presentation.OtherInfoPresenterImpl
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
-
-private const val LASTFM_URL = "https://ws.audioscrobbler.com/2.0/"
+import ayds.lisboa.songinfo.moredetails.data.CardRepositoryImpl
+import ayds.lisboa.songinfo.moredetails.data.internal.CardsLocalStorage
+import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CardsLocalStorageImpl
+import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToCardMapper
+import ayds.lisboa.songinfo.moredetails.data.internal.sqldb.CursorToCardMapperImpl
+import ayds.lastfmservice.LastFMInjector
+import ayds.lastfmservice.ArtistService
+import ayds.lisboa.songinfo.moredetails.data.broker.CardsBroker
+import ayds.lisboa.songinfo.moredetails.data.broker.CardsBrokerImpl
+import ayds.lisboa.songinfo.moredetails.data.broker.proxys.LastFMProxy
+import ayds.lisboa.songinfo.moredetails.data.broker.proxys.NewYorkTimesProxy
+import ayds.lisboa.songinfo.moredetails.data.broker.proxys.ProxyService
+import ayds.lisboa.songinfo.moredetails.data.broker.proxys.WikipediaProxy
+import ayds.lisboa.songinfo.moredetails.data.broker.proxys.mappers.*
+import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService
+import ayds.lisboa.songinfo.moredetails.domain.repository.*
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.*
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.OtherInfoPresenterImpl
+import ayds.lisboa.songinfo.moredetails.presentation.view.OtherInfoView
+import ayds.ny3.newyorktimes.external.NYTimesArtistInfoService
+import ayds.ny3.newyorktimes.external.injector.NYTimesArtistInfoServiceInjector
+import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaInjector
 
 object MoreDetailsInjector {
 
-    private lateinit var lastFMAPI: LastFMAPI
-    private lateinit var lastFMToArtistResolver: LastFMToArtistResolver
-    private lateinit var artistService: ArtistService
+    private lateinit var lastFMService: ArtistService
+    private lateinit var wikipediaService: WikipediaService
+    private lateinit var nyTimesService: NYTimesArtistInfoService
 
-    private lateinit var cursorToArtistMapper: CursorToArtistMapper
-    private lateinit var lastFMLocalStorage: ArtistLocalStorage
+    private lateinit var cursorToCardMapper: CursorToCardMapper
+    private lateinit var cardsLocalStorage: CardsLocalStorage
 
-    private lateinit var artistRepository: ArtistRepository
+    private lateinit var lastFMProxy: ProxyService
+    private lateinit var wikipediaProxy: ProxyService
+    private lateinit var nyTimesProxy: ProxyService
+    private var proxyServices = ArrayList<ProxyService>()
+
+    private lateinit var cardRepository: CardRepository
     private lateinit var otherInfoPresenter: OtherInfoPresenter
     private lateinit var otherInfoWindow: OtherInfoView
 
-    private val artistInfoResolver = ArtistInfoResolverImpl()
+    private lateinit var broker: CardsBroker
+
+    private val labelFactory: LabelFactory = LabelFactoryImpl
+    private lateinit var cardResolver: CardResolver
+
+    private lateinit var artistLastFMToCardMapper: ArtistLastFMToCardMapper
+    private lateinit var artistNYTimesToCardMapper: ArtistNYTimesToCardMapper
+    private lateinit var artistWikipediaToCardMapper: ArtistWikipediaToCardMapper
 
     fun init(otherInfoWindow: OtherInfoView) {
         this.otherInfoWindow = otherInfoWindow
-        initializeLastFMLocalStorage()
-        initializeLastFMService()
-        initializeArtistRepository()
+        initializeCardResolver()
+        initializeCardsLocalStorage()
+        initializeServices()
+        initializeMappers()
+        initializeProxys()
+        initializeBroker()
+        initializeCardRepository()
         initializePresenter()
     }
 
-    private fun initializeLastFMLocalStorage() {
-        cursorToArtistMapper = CursorToArtistMapperImpl()
-        lastFMLocalStorage = ArtistLocalStorageImpl(otherInfoWindow as Context, cursorToArtistMapper)
+    private fun initializeMappers() {
+        artistLastFMToCardMapper = ArtistLastFMToCardMapperImpl()
+        artistNYTimesToCardMapper = ArtistNYTimesToCardMapperImpl()
+        artistWikipediaToCardMapper = ArtistWikipediaToCardMapperImpl()
+    }
+    private fun initializeCardResolver() {
+        cardResolver = CardResolverImpl(labelFactory)
     }
 
-    private fun initializeLastFMService() {
-        lastFMAPI = getLastFMAPI()
-        lastFMToArtistResolver = JsonToArtistResolver()
-        artistService = ArtistServiceImpl(lastFMAPI, lastFMToArtistResolver)
+    private fun initializeCardsLocalStorage() {
+        cursorToCardMapper = CursorToCardMapperImpl()
+        cardsLocalStorage = CardsLocalStorageImpl(otherInfoWindow as Context, cursorToCardMapper)
     }
 
-    private fun getLastFMAPI(): LastFMAPI {
-        return Retrofit.Builder()
-            .baseUrl(LASTFM_URL)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-            .create(LastFMAPI::class.java)
+    private fun initializeServices() {
+        lastFMService = LastFMInjector.getService()
+        wikipediaService = WikipediaInjector.wikipediaService
+        nyTimesService = NYTimesArtistInfoServiceInjector.newYorkTimesArtistInfoServiceImpl
     }
 
-    private fun initializeArtistRepository() {
-        artistRepository = ArtistRepositoryImpl(lastFMLocalStorage, artistService)
+    private fun initializeProxys() {
+        lastFMProxy = LastFMProxy(lastFMService, artistLastFMToCardMapper)
+        wikipediaProxy = WikipediaProxy(wikipediaService, artistWikipediaToCardMapper)
+        nyTimesProxy = NewYorkTimesProxy(nyTimesService, artistNYTimesToCardMapper)
+        proxyServices.add(lastFMProxy)
+        proxyServices.add(wikipediaProxy)
+        proxyServices.add(nyTimesProxy)
+    }
+
+    private fun initializeBroker(){
+        broker = CardsBrokerImpl(proxyServices)
+    }
+
+    private fun initializeCardRepository() {
+        cardRepository = CardRepositoryImpl(cardsLocalStorage, broker)
     }
 
     private fun initializePresenter() {
-        otherInfoPresenter = OtherInfoPresenterImpl(artistRepository, artistInfoResolver)
+        otherInfoPresenter = OtherInfoPresenterImpl(cardRepository, cardResolver)
         otherInfoWindow.setPresenter(otherInfoPresenter)
     }
 }

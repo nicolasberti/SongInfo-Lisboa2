@@ -1,19 +1,14 @@
-package ayds.lisboa.songinfo.moredetails.presentation
+package ayds.lisboa.songinfo.moredetails.presentation.view
 
-import ayds.observer.Observer
 import android.os.Bundle
-import android.text.Html
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import ayds.lisboa.songinfo.R
 import ayds.lisboa.songinfo.moredetails.dependencyInjector.MoreDetailsInjector
-import com.squareup.picasso.Picasso
-import java.util.*
-import ayds.lisboa.songinfo.moredetails.data.*
-import ayds.lisboa.songinfo.moredetails.domain.*
-import ayds.lisboa.songinfo.utils.UtilsInjector.navigationUtils
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.OtherInfoPresenter
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.OtherInfoUiState
+import ayds.lisboa.songinfo.moredetails.presentation.presenter.UiCard
+import ayds.observer.Observer
 
 class OtherInfoView: AppCompatActivity(
 ){
@@ -22,9 +17,8 @@ class OtherInfoView: AppCompatActivity(
     }
 
     private lateinit var otherInfoPresenter: OtherInfoPresenter
-    private lateinit var textMoreDetails: TextView
-    private lateinit var imageView: ImageView
-    private lateinit var urlButton: Button
+    private lateinit var viewPager: ViewPager2
+    private lateinit var cardAdapter: CardAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +30,7 @@ class OtherInfoView: AppCompatActivity(
     }
 
     fun setPresenter(otherInfoPresenter: OtherInfoPresenter){
-         this.otherInfoPresenter = otherInfoPresenter
+        this.otherInfoPresenter = otherInfoPresenter
     }
 
     private fun searchAction(){
@@ -54,9 +48,7 @@ class OtherInfoView: AppCompatActivity(
     }
 
     private fun initProperties(){
-        textMoreDetails = findViewById(R.id.textMoreDetails)
-        imageView = findViewById(R.id.imageView)
-        urlButton = findViewById(R.id.openUrlButton)
+        viewPager = findViewById(R.id.viewPager)
     }
 
     private fun subscribeEvents() {
@@ -68,24 +60,12 @@ class OtherInfoView: AppCompatActivity(
 
     private fun updateView(uiState: OtherInfoUiState){
         runOnUiThread {
-            setImageView(uiState.lastFMImage)
-            setTextInfoView(uiState.info)
-            updateListenerUrl(uiState.url)
+            createAdapter(uiState.cards)
         }
     }
 
-    private fun setImageView(image: String){
-        val picasso =  Picasso.get()
-        val requestCreator = picasso.load(image)
-        requestCreator.into(imageView)
-    }
-
-    @Suppress("DEPRECATION")
-    private fun setTextInfoView(info: String) {
-        textMoreDetails.text = Html.fromHtml(info)
-    }
-
-    private fun updateListenerUrl(url: String) {
-        urlButton.setOnClickListener { navigationUtils.openExternalUrl(this, url) }
+    private fun createAdapter(cards: List<UiCard>){
+        cardAdapter = CardAdapter(this, cards)
+        viewPager.adapter = cardAdapter
     }
 }
