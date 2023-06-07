@@ -11,11 +11,9 @@ import org.junit.Test
 
 class OtherInfoPresenterTest {
 
-    private val labelFactory: LabelFactory = mockk(relaxUnitFun = true)
     private val cardRepository: CardRepository = mockk(relaxUnitFun = true)
-    private val cardResolver: CardResolver by lazy {
-        CardResolverImpl(labelFactory)
-    }
+    private val cardResolver: CardResolver = mockk(relaxUnitFun = true)
+
     private val otherInfoPresenter: OtherInfoPresenter by lazy {
         OtherInfoPresenterImpl(cardRepository, cardResolver)
     }
@@ -38,6 +36,9 @@ class OtherInfoPresenterTest {
         every { cardResolver.getSource(Source.LastFM) } returns "Last FM"
         every { cardResolver.getSource(Source.NYTimes) } returns "New York Times"
         every { cardResolver.getSource(Source.Wikipedia) } returns "Wikipedia"
+        every { cardResolver.getFormattedInfo(cards[0], artistName) } returns "info1"
+        every { cardResolver.getFormattedInfo(cards[1], artistName) } returns "info2"
+        every { cardResolver.getFormattedInfo(cards[2], artistName) } returns "info3"
 
         val otherInfoUiStateTester: (OtherInfoUiState) -> Unit = mockk(relaxed = true)
         otherInfoPresenter.uiEventObservable.subscribe{
